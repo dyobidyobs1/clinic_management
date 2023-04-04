@@ -4,10 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 from .forms import *
 from .models import *
 
-
+# Auth
 def Register(request):
     if request.user.is_authenticated:
         return redirect("home")
@@ -49,9 +52,21 @@ def Logout(request):
     logout(request)
     return redirect("login")
 
+# Patient
+@login_required(login_url="login")
+def HomePatient(request):
+    return render(request, "reservation/patient/patient_home.html")
+
+# Doctors
+@login_required(login_url="login")
+def HomeDoctor(request):
+    return render(request, "reservation/patient/patient_home.html")
+
+# Admin/Staff
+@login_required(login_url="login")
+def adminpage(request):
+    return HttpResponseRedirect(reverse('admin:index'))
 
 @login_required(login_url="login")
-def Home(request):
-    return render(request, "reservation/home.html")
-
-    
+def HomeAdmin(request):
+    return render(request, "reservation/patient/patient_home.html")

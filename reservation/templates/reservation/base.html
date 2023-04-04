@@ -18,44 +18,98 @@
 </head>
 <body>
     <nav class="navbar">
-        <a class="brand" href="{% url 'home' %}"><img 
+        <a class="brand"><img 
           src="" alt="Logo" height="70px" width="80px"></a>
-        <ul>
-          {% if user.is_authenticated %}
-            <li>
-                <a href="{% url 'logout' %}">Logout</a>
-            </li>
-          {% else %}
-            <li>
-                <a href="{% url 'login' %}">Login</a>
-            </li>
-            <li>
-                <a href="{% url 'register' %}">Register</a>
-            </li>
-          {% endif %}
-        </ul>
+          <ul>
+            {% if user.is_authenticated %}
+              {% if user.is_staff %}
+                {% if user.is_superuser %}
+                <li>
+                  <a href="{% url 'admin' %}">Admin Page</a>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'adminindex' %}">Add Doctor</a>
+                </li>
+                <li>
+                    <a href="{% url 'adminindex' %}">Add Specialities</a>
+                </li>
+                <li>
+                  <a href="{% url 'adminindex' %}">Add Facilities</a>
+                </li>
+                <li>
+                  <a href="{% url 'adminindex' %}">View Reservation</a>
+                </li>
+                <li>
+                  <a href="{% url 'adminindex' %}">View Reservation History</a>
+                </li>
+                <li>
+                  <a href="{% url 'adminindex' %}">Logout</a>
+                </li>
+              {% elif user.is_doctor %}
+                <li>
+                  <a href="{% url 'doctorsindex' %}">Home</a>
+                </li>
+                <li>
+                  <a href="{% url 'doctorsindex' %}">Check Consultation</a>
+                </li>
+                <li>
+                  <a href="{% url 'doctorsindex' %}">Upload Results</a>
+                </li>
+                <li>
+                  <a href="{% url 'doctorsindex' %}">Consultation History</a>
+                </li>
+                <li>
+                  <a href="{% url 'doctorsindex' %}">Profile</a>
+                </li>
+                <li>
+                  <a href="{% url 'logout' %}">Logout</a>
+                </li>
+              {% else %}
+                <li>
+                  <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Add Reservation</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Add Consultation</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Pending Reservation</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Pending Consultation</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Reservation History</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Consultation History</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Laboratory Results</a>
+                </li>
+                <li>
+                  <a href="{% url 'index' %}">Profile</a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </li>
+              {% endif %}
+            {% else %}
+              <li>
+                  <a href="{% url 'login' %}">Login</a>
+              </li>
+              <li>
+                  <a href="{% url 'register' %}">Register</a>
+              </li>
+            {% endif %}
+          </ul>
     </nav>
     <div class="content">
         {% block content %}
         {% endblock %}
     </div>
 </body>
-<script>
-  window.addEventListener('mouseover', initLandbot, { once: true });
-  window.addEventListener('touchstart', initLandbot, { once: true });
-  var myLandbot;
-  function initLandbot() {
-    if (!myLandbot) {
-      var s = document.createElement('script');s.type = 'text/javascript';s.async = true;
-      s.addEventListener('load', function() {
-        myLandbot = new Landbot.Popup({
-          configUrl: 'https://storage.googleapis.com/landbot.online/v3/H-1437718-E7U7J58W4CL8QWW3/index.json',
-        });
-      });
-      s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
-      var x = document.getElementsByTagName('script')[0];
-      x.parentNode.insertBefore(s, x);
-    }
-  }
-  </script>
 </html>

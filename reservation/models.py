@@ -1,30 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+class CustomUser(AbstractUser):
+    is_doctor = models.BooleanField(default=False)
 
-
-
-class UserDetails(models.Model):
-    GENDER = (
-        ("M", "Male"),
-        ("F", "Female"),
-    )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    gender = models.CharField(max_length=1, choices=GENDER)
-    address = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=50, null=True)
-    bdate = models.DateField()
-    placebirth = models.CharField(max_length=50, null=True)
-
-    def __str__(self):
-        return f'{self.first_name} {self.middle_name} {self.last_name}'
-
-
+# ADMIN
 class Services(models.Model):
     service_name = models.CharField(max_length=255)
     service_description = models.TextField()
@@ -42,48 +23,20 @@ class Facilites(models.Model):
     def __str__(self):
         return f"{self.facility_name} {self.facility_price}"
 
-
-# Patients/User
-class ReservationServices(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    services = models.ManyToManyField(Services)
-    schedule = models.DateTimeField()
-
-    def date(self):
-        return self.schedule.strftime("%B %d %Y")
-
-    def __str__(self):
-        return f"{self.user} {self.services.count()}"
-
-
-class ReservationFacilities(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    facility = models.ManyToManyField(Facilites)
-    schedule = models.DateTimeField()
-
-    def date(self):
-        return self.schedule.strftime("%B %d %Y")
-
-    def __str__(self):
-        return f"{self.user} {self.facility.count()}"
-
-
-
-# Admin/Doctor
 class Speciality(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return f"{self.name}"
 
-
+# DOCTOR
 class DoctorDetails(models.Model):
     GENDER = (
         ("M", "Male"),
         ("F", "Female"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -96,3 +49,63 @@ class DoctorDetails(models.Model):
 
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
+
+class Results(models.Model):
+    doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.CharField(max_length=255)
+    is_facility = models.BooleanField(default=False)
+    result_file = models.FileField()
+    description = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"A Result for {self.patient} on {self.date}"
+
+
+# PATIENT/USER
+class UserDetails(models.Model):
+    GENDER = (
+        ("M", "Male"),
+        ("F", "Female"),
+    )
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    first_name = models.CharField(max_length=50)
+    middle_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    gender = models.CharField(max_length=1, choices=GENDER)
+    address = models.CharField(max_length=200, null=True)
+    email = models.CharField(max_length=50, null=True)
+    bdate = models.DateField()
+    placebirth = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        return f'{self.first_name} {self.middle_name} {self.last_name}'
+
+
+class ReservationFacilities(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    facility = models.ManyToManyField(Facilites)
+    schedule = models.DateTimeField()
+
+    def date(self):
+        return self.schedule.strftime("%B %d %Y")
+
+    def __str__(self):
+        return f"{self.user} {self.id}"
+
+
+class ReserveConsulation(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    speciality = models.CharField(max_length=255)
+    doctor = models.CharField(max_length=255)
+    is_approve = models.BooleanField(default=False)
+    schedule = models.DateTimeField()
+
+    def date(self):
+        return self.schedule.strftime("%B %d %Y")
+    
+    def __str__(self):
+        return f"Consultation for {self.user} with Dr.{self.doctor}"
+
+
