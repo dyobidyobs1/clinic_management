@@ -30,3 +30,8 @@ class ReservationFormConsulation(forms.ModelForm):
         fields = "__all__"
 
         widgets = {"schedule": DateInput()}
+
+class ResultsForm(forms.ModelForm):
+    class Meta:
+        model = Results
+        fields = "__all__"

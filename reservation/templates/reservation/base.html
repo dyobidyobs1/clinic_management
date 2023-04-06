@@ -10,11 +10,7 @@
       type="text/css"
       href="{% static 'css/index.css' %}"
       />
-    {% if title %}
-        <title>{{ title }}</title>
-    {% else %}
-        <title>Homepage</title>
-    {% endif %}
+      <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
     <nav class="navbar">
@@ -29,38 +25,23 @@
                 </li>
                 {% endif %}
                 <li>
-                    <a href="{% url 'adminindex' %}">Add Doctor</a>
-                </li>
-                <li>
-                    <a href="{% url 'adminindex' %}">Add Specialities</a>
-                </li>
-                <li>
-                  <a href="{% url 'adminindex' %}">Add Facilities</a>
-                </li>
-                <li>
-                  <a href="{% url 'adminindex' %}">View Reservation</a>
-                </li>
-                <li>
-                  <a href="{% url 'adminindex' %}">View Reservation History</a>
-                </li>
-                <li>
-                  <a href="{% url 'adminindex' %}">Logout</a>
+                  <a href="{% url 'logout' %}">Logout</a>
                 </li>
               {% elif user.is_doctor %}
                 <li>
                   <a href="{% url 'doctorsindex' %}">Home</a>
                 </li>
                 <li>
-                  <a href="{% url 'doctorsindex' %}">Check Consultation</a>
+                  <a href="{% url 'consultation_doctors' %}">Check Consultation</a>
                 </li>
                 <li>
-                  <a href="{% url 'doctorsindex' %}">Upload Results</a>
+                  <a href="{% url 'upload_labresults' %}">Upload Results</a>
                 </li>
                 <li>
-                  <a href="{% url 'doctorsindex' %}">Consultation History</a>
+                  <a href="{% url 'consulhistory' %}">Consultation History</a>
                 </li>
                 <li>
-                  <a href="{% url 'doctorsindex' %}">Profile</a>
+                  <a href="{% url 'profile_doctor' %}">Profile</a>
                 </li>
                 <li>
                   <a href="{% url 'logout' %}">Logout</a>
@@ -70,28 +51,28 @@
                   <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Add Reservation</a>
+                  <a href="{% url 'reservation_add' %}">Add Reservation</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Add Consultation</a>
+                  <a href="{% url 'consultation_add' %}">Add Consultation</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Pending Reservation</a>
+                  <a href="{% url 'reservation' %}">Pending Reservation</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Pending Consultation</a>
+                  <a href="{% url 'consultation' %}">Pending Consultation</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Reservation History</a>
+                  <a href="{% url 'reservation_history' %}">Reservation History</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Consultation History</a>
+                  <a href="{% url 'consultation_history' %}">Consultation History</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Laboratory Results</a>
+                  <a href="{% url 'labresults' %}">Laboratory Results</a>
                 </li>
                 <li>
-                  <a href="{% url 'index' %}">Profile</a>
+                  <a href="{% url 'profile_patient' %}">Profile</a>
                 </li>
                 <li>
                     <a href="{% url 'logout' %}">Logout</a>
