@@ -3,7 +3,82 @@
 	Profile
 {% endblock %}
 {% block content %}
+<!-- <div class="container">
+    <!-- <h1>Welcome Patient</h1> -->
+<!-- </div> --> 
 <div class="container">
-    <h1>Welcome Patient</h1>
-</div>
+    <div class="main-body">
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Full Name</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{details.first_name}} {{details.middle_name}} {{details.last_name}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{details.email}}
+                    </div>
+                  </div>
+                  {% if details.bdate %}
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                        <h6 class="mb-0">Birth Date</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                        {{details.date}}
+                        </div>
+                    </div>
+                  {% endif %}
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Place of Birth</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{details.placebirth}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Gender</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                    {% if details.gender == "M" %}
+                        Male
+                    {% else %}
+                        Female
+                    {% endif %}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Address</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{details.address}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div style="padding-top: 2rem;">
+                      <a class="clicks" target="" href="{% url 'editprofilept' details.rndid  %}">Edit</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

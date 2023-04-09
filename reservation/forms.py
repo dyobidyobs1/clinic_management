@@ -21,7 +21,7 @@ class ReservationFormFacilities(forms.ModelForm):
         model = ReservationFacilities
         fields = "__all__"
 
-        widgets = {"schedule": DateInput(), "facility": forms.CheckboxSelectMultiple}
+        widgets = {"schedule": DateInput()}
 
 
 class ReservationFormConsulation(forms.ModelForm):
@@ -35,3 +35,17 @@ class ResultsForm(forms.ModelForm):
     class Meta:
         model = Results
         fields = "__all__"
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserDetails
+        fields = "__all__"
+
+        widgets = {"bdate": DateInput()}
+
+class DoctorProfileForm(forms.ModelForm):
+    class Meta:
+        model = DoctorDetails
+        fields = "__all__"
+
+        widgets = {"bdate": DateInput()}

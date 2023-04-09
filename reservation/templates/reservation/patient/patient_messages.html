@@ -1,0 +1,24 @@
+{% extends 'reservation/base.html' %}
+{% block title %}
+	Messages
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Messages</h1>
+    {% for i in messages %}
+    <main class="l-card-messages">
+        <section class="l-card__text">
+            <p>
+               {{i.message}}
+            </p>
+        </section>
+        <section class="l-card__user">
+            <div class="l-card__userInfo">
+                <p>From: <span style="text-transform:uppercase">{{i.user}}</span></p>
+            </div>
+        </section>
+    </main>
+    {% endfor %}
+    <div class="hidden">y</div>
+</div>
+{% endblock %}

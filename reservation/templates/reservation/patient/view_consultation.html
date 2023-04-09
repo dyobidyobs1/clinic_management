@@ -1,0 +1,25 @@
+{% extends 'reservation/base.html' %}
+{% block title %}
+	Consutation
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Consultation</h1>
+    {% for i in details %}
+    <main class="l-card-consultation">
+        <section class="l-card__text">
+            <p>
+               {{i.speciality}}
+            </p>
+        </section>
+        <section class="l-card__user">
+            <div class="l-card__userInfo">
+                <span>Dr.{{i.last_name}}, {{i.first_name}} {{i.middle_name}}</span>
+                <span>Schedule a Consultation <a href="{% url 'consultation_add' i.rndid %}">Here...</a></span>
+            </div>
+        </section>
+    </main>
+    {% endfor %}
+    <div class="hidden">y</div>
+</div>
+{% endblock %}

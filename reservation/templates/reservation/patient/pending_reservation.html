@@ -4,6 +4,43 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Welcome Patient</h1>
+    <a href="{% url 'consultation' %}" class="clicks">Pending Consultation</a>
+    <h2 style="padding-top: 2rem;">Pending Reservation of Facility</h2>
+    <div class="tb-res">
+        <div class="tbl-header">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+              <tr>
+                <th scope="col">Facility</th>
+                <th class="hide" scope="col">Schedule</th>
+                <th class="hide" scope="col">Price</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tbl-content">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+              <tr>
+                {% for i in reservation %}
+                <th>{{i.facility.facility_name}}</th>
+                <td>{{i.date}}</td>
+                <td>{{i.facility.facility_price}}</td>
+                <td>Pending</td>
+                <td>
+                  <a
+                    class="button-link"
+                    href=""
+                    class="crud"
+                    >Cancel</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
 </div>
 {% endblock %}

@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
+import locale
+import uuid
+locale.setlocale(locale.LC_ALL, 'fil-PH')
 
 class CustomUser(AbstractUser):
     is_doctor = models.BooleanField(default=False)
@@ -13,15 +16,19 @@ class Services(models.Model):
 
 
     def __str__(self):
-        return f"{self.service_name} {self.service_price}"
+        return f"{self.service_name} {locale.currency(self.service_price, grouping=True)}"
 
 class Facilites(models.Model):
     facility_name = models.CharField(max_length=255)
     facility_description = models.TextField()
     facility_price = models.DecimalField(max_digits=6, decimal_places=2)
 
+    def price(self):
+        locale.setlocale(locale.LC_ALL, 'fil-PH')
+        return locale.currency(self.facility_price, grouping=True)
+
     def __str__(self):
-        return f"{self.facility_name} {self.facility_price}"
+        return f"{self.facility_name} {locale.currency(self.facility_price, grouping=True)}"
 
 class Speciality(models.Model):
     name = models.CharField(max_length=255)
@@ -43,10 +50,17 @@ class DoctorDetails(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER)
     address = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=50, null=True)
-    bdate = models.DateField()
+    bdate = models.DateTimeField(null=True, blank=True)
     placebirth = models.CharField(max_length=50, null=True)
-    speciality = models.ManyToManyField(Speciality)
+    speciality = models.ForeignKey(Speciality, on_delete=models.CASCADE, null=True, blank=True)
+    rndid = models.CharField(
+        max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True
+    )
 
+    def date(self):
+        locale.setlocale(locale.LC_ALL, 'en-US')
+        return self.bdate.strftime("%B %d, %Y")
+        
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
 
@@ -76,8 +90,15 @@ class UserDetails(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER)
     address = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=50, null=True)
-    bdate = models.DateField()
+    bdate = models.DateTimeField(null=True, blank=True)
     placebirth = models.CharField(max_length=50, null=True)
+    rndid = models.CharField(
+        max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True
+    )
+
+    def date(self):
+        locale.setlocale(locale.LC_ALL, 'en-US')
+        return self.bdate.strftime("%B %d, %Y")
 
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
@@ -85,27 +106,50 @@ class UserDetails(models.Model):
 
 class ReservationFacilities(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    facility = models.ManyToManyField(Facilites)
+    facility = models.ForeignKey(Facilites, on_delete=models.CASCADE, null=True, blank=True)
     schedule = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    is_approve = models.BooleanField(default=False)
 
     def date(self):
-        return self.schedule.strftime("%B %d %Y")
+        locale.setlocale(locale.LC_ALL, 'en-US')
+        return self.schedule.strftime("%B %d, %Y")
 
     def __str__(self):
-        return f"{self.user} {self.id}"
+        return f"{self.user} {self.facility}"
 
 
 class ReserveConsulation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     speciality = models.CharField(max_length=255)
     doctor = models.CharField(max_length=255)
+    doctors_id = models.CharField(max_length=255, null=True, blank=True)
     is_approve = models.BooleanField(default=False)
     schedule = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def date(self):
-        return self.schedule.strftime("%B %d %Y")
+        locale.setlocale(locale.LC_ALL, 'en-US')
+        return self.schedule.strftime("%B %d, %Y")
     
     def __str__(self):
-        return f"Consultation for {self.user} with Dr.{self.doctor}"
+        return f"Consultation for {self.user} with {self.doctor}"
 
+class Billing(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    total_payment = models.DecimalField(max_digits=6, decimal_places=2)
+    
 
+    def __str__(self):
+        return f"{self.user} payables of {locale.currency(self.total_payment, grouping=True)}"
+
+class Messages(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    to = models.CharField(max_length=255)
+    message = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} has a message to {self.to}"
+
+    

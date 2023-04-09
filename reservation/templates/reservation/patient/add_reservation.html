@@ -4,6 +4,19 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Welcome Patient</h1>
+    <h1>Facility Reservation</h1>
+    <div class="section-delete">
+        <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Facility: </label>
+        <input name="facility" type="text" placeholder="{{details}}" value="{{details}}" disabled>
+        <label>Schedule: </label>
+        {{form.schedule}}
+        <div class="btn-flex">
+            <button type="submit" class="button-register">Schedule</button>
+            <button type="reset" class="button-register">Reset</button>
+        </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
