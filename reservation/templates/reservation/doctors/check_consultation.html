@@ -1,9 +1,48 @@
 {% extends 'reservation/base.html' %}
 {% block title %}
-	Consultation
+	Consultations
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Welcome Doctor</h1>
+    <div class="tb-res">
+        <div class="tbl-header">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+              <tr>
+                <th scope="col">Patient</th>
+                <th class="hide" scope="col">Schedule</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tbl-content">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+              <tr>
+                {% for i in reservation %}
+                <th>{{i.patient}}</th>
+                <td>{{i.date}}</td>
+                {% if i.is_approve %}
+                <td>Approved</td>
+                {% else %}
+                <td>Pending</td>
+                {% endif %}
+                <td>
+                {% if i.is_approve %}
+                Now on Schedule
+                {% else %}
+                <a
+                class="button-link"
+                href="{% url 'approvecon' i.id %}"
+                class="crud">Approve</a>
+                {% endif %}
+                </td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
 </div>
 {% endblock %}

@@ -49,3 +49,8 @@ class DoctorProfileForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {"bdate": DateInput()}
+
+class UploadResultsForm(forms.ModelForm):
+    class Meta:
+        model = Results
+        fields = "__all__"

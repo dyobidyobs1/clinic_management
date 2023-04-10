@@ -5,6 +5,13 @@ import locale
 import uuid
 locale.setlocale(locale.LC_ALL, 'fil-PH')
 
+
+
+def create_rand_id():
+        from django.utils.crypto import get_random_string
+        return get_random_string(length=13, 
+            allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+
 class CustomUser(AbstractUser):
     is_doctor = models.BooleanField(default=False)
 
@@ -12,7 +19,7 @@ class CustomUser(AbstractUser):
 class Services(models.Model):
     service_name = models.CharField(max_length=255)
     service_description = models.TextField()
-    service_price = models.DecimalField(max_digits=6, decimal_places=2)
+    service_price = models.DecimalField(max_digits=10, decimal_places=2)
 
 
     def __str__(self):
@@ -21,7 +28,7 @@ class Services(models.Model):
 class Facilites(models.Model):
     facility_name = models.CharField(max_length=255)
     facility_description = models.TextField()
-    facility_price = models.DecimalField(max_digits=6, decimal_places=2)
+    facility_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def price(self):
         locale.setlocale(locale.LC_ALL, 'fil-PH')
@@ -73,7 +80,9 @@ class Results(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"A Result for {self.patient} on {self.date}"
+        locale.setlocale(locale.LC_ALL, 'en-US')
+        date = self.date.strftime("%B %d, %Y")
+        return f"A Result for {self.patient} on {date}"
 
 
 # PATIENT/USER
@@ -83,7 +92,7 @@ class UserDetails(models.Model):
         ("F", "Female"),
     )
 
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -110,6 +119,8 @@ class ReservationFacilities(models.Model):
     schedule = models.DateTimeField()
     date_created = models.DateTimeField(auto_now_add=True)
     is_approve = models.BooleanField(default=False)
+    is_done = models.BooleanField(default=False)
+    is_cancelled = models.BooleanField(default=False)
 
     def date(self):
         locale.setlocale(locale.LC_ALL, 'en-US')
@@ -121,10 +132,13 @@ class ReservationFacilities(models.Model):
 
 class ReserveConsulation(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.CharField(max_length=255)
     speciality = models.CharField(max_length=255)
     doctor = models.CharField(max_length=255)
     doctors_id = models.CharField(max_length=255, null=True, blank=True)
     is_approve = models.BooleanField(default=False)
+    is_done = models.BooleanField(default=False)
+    is_cancelled = models.BooleanField(default=False)
     schedule = models.DateTimeField()
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -137,11 +151,18 @@ class ReserveConsulation(models.Model):
 
 class Billing(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    total_payment = models.DecimalField(max_digits=6, decimal_places=2)
+    reference_number = models.CharField(max_length=13, editable=False, null=True, blank=True, 
+        default=create_rand_id)
+    total_payment = models.DecimalField(max_digits=10, decimal_places=2)
     
 
     def __str__(self):
-        return f"{self.user} payables of {locale.currency(self.total_payment, grouping=True)}"
+        return f"{(self.user.username.upper())} has a payable of {locale.currency(self.total_payment, grouping=True)} \
+            with a Reference Number of {self.reference_number}"
+
+    def price(self):
+        locale.setlocale(locale.LC_ALL, 'fil-PH')
+        return locale.currency(self.total_payment, grouping=True)
 
 class Messages(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)

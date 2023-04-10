@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # "cloudinary_storage",
+    # "cloudinary",
     'reservation'
 ]
 
@@ -148,3 +150,11 @@ DATE_INPUT_FORMATS = [
     "%d %B %Y",  # '25 October 2006'
     "%d %B, %Y",  # '25 October, 2006'
 ]
+
+# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# CLOUDINARY_STORAGE = {
+#     "CLOUD_NAME": "dmagk9gck",
+#     "API_KEY": "964986345641993",
+#     "API_SECRET": "sDSJ1IXtdVjMrMAkGxABuvS2wmo",
+# }

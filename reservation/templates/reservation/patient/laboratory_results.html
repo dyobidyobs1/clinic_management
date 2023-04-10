@@ -4,6 +4,22 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Welcome Patient</h1>
+    {% for i in results %}
+    <main class="l-card-consultation">
+        <section class="l-card__text">
+            <p>
+               {{i.description}}
+            </p>
+        </section>
+        <section class="l-card__user">
+            <div class="l-card__userInfo">
+                <span>Dr. {{i.doctor}}</span>
+                <sub>{{i.date}}</sub>
+                <span>Download the Pdf <a href="{% url 'download' i.id %}">Here...</a></span>
+            </div>
+        </section>
+    </main>
+    {% endfor %}
+    <div class="hidden">y</div>
 </div>
 {% endblock %}

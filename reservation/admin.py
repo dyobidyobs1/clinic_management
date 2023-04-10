@@ -36,7 +36,6 @@ class UserAdminConfig(UserAdmin):
     )
 
 
-
 admin.site.register(CustomUser, UserAdminConfig)
 admin.site.register(ReservationFacilities)
 admin.site.register(ReserveConsulation)
@@ -47,3 +46,7 @@ admin.site.register(Speciality)
 admin.site.register(DoctorDetails)
 admin.site.register(UserDetails)
 admin.site.register(Messages)
+
+@admin.register(Billing)
+class BillingAdmin(admin.ModelAdmin):
+    readonly_fields = ["reference_number"]

@@ -4,6 +4,23 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Welcome Doctor</h1>
+    <div class="section-delete">
+        <form action="" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label>Patient: </label>
+          <input type="text" name="patient" maxlength="255" required id="id_patient" value="{{reservation.patient}}" placeholder="{{reservation.patient}}" disabled>
+          <label>Description: </label>
+          <textarea name="description" cols="70" rows="8" required id="id_description"></textarea>
+          <label>Upload File: </label>
+          {{form.result_file}}
+
+            
+          <input name="patient" type="hidden" maxlength="255" required id="id_patient" value="{{reservation.patient}}" hidden>
+          <div class="btn-flex">
+            <button type="submit" class="button-register">Upload</button>
+            <button type="reset" class="button-register">Reset</button>
+          </div>
+        </form>
+      </div>
 </div>
 {% endblock %}
