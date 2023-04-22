@@ -38,16 +38,21 @@ urlpatterns = [
     path('scheduledoctor', views.DoctorSchedule, name='scheduledt'),
     path('approvecon/<str:pk>', views.ApproveConsultation, name='approvecon'),
     path('donecon/<str:pk>', views.DoneConsultation, name='donecon'),
+
+
+    path('approvereservation/<str:pk>', views.ApproveReservation, name='approveres'),
+    path('donereservation/<str:pk>', views.DoneConsultation, name='doneres'),
     
     # DOWNLOAD
     path('download/<int:document_id>/', views.download, name='download'),
+    path('report/', views.report, name='report'),
     # AUTH
     path("register/", views.Register, name="register"),
     path("login/", views.Login, name="login"),
     path("logout/", views.Logout, name="logout"),
     # ADMIN
     path('admin/', views.adminpage, name='admin'),
-    path('admin/', views.adminpage, name='admin'),
+    path('adminreservation/', views.CheckReservation, name='adminreservation'),
 ]
 
 

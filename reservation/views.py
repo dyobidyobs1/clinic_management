@@ -18,21 +18,20 @@ from fpdf import  FPDF
 
 # Print PDF
 def report(request):
-    reservation = ReservationFacilities.objects.filter(user=Q(user=request.user) and 
-        Q(is_approve=True) and Q(is_done=False))
-
+    reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
+        Q(is_approve=True)).filter(is_done=False)
+    print(reservation)
     pdf = FPDF('P', 'mm', (214.63, 219.71))
     pdf.add_page()
-    pdf.set_font('courier', 'B', 16)
-    pdf.cell(40, 10, 'This is what affroved so far for Facility Reservation:',0,1)
-    pdf.cell(40, 10, 'This is what affroved so far for Facility Reservation:',0,1)
+    pdf.set_font('arial', 'B', 16)
     pdf.cell(40, 10, '',0,1)
-    pdf.set_font('courier', '', 12)
+    pdf.set_font('arial', '', 12)
     pdf.cell(200, 8, f"{'Item'.ljust(30)}  {'Amount'.rjust(20)}", 0, 1)
     pdf.line(10, 30, 150, 30)
     pdf.line(10, 38, 150, 38)
     for line in reservation:
-        pdf.cell(200, 8, f"{line.facilites.facility_name.ljust(30)}  {line.facilites.facility_name.rjust(20)}", 0, 1)
+        text = str(line.facility.price)
+        pdf.cell(200, 8, f"Facility: {line.facility.facility_name.ljust(30)} Price: {text.rjust(20)}", 0, 1)
 
     pdf.output('invoice.pdf', 'F')
     return FileResponse(open('invoice.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
@@ -359,6 +358,39 @@ def adminpage(request):
 @login_required(login_url="login")
 def HomeAdmin(request):
     return render(request, "reservation/admin.html")
+
+@login_required(login_url="login")
+def ApproveReservation(request, pk):
+    approveConsul = ReservationFacilities.objects.get(id=pk)
+    approveConsul.is_approve = True
+    approveConsul.save()
+    Messages.objects.create(
+        user=request.user,
+        to=approveConsul.user,
+        message=f"Your Reservation Schedule has been approved by \
+            {request.user}",
+        )
+    return redirect("admin")
+
+@login_required(login_url="login")
+def DoneReservation(request, pk):
+    approveConsul = ReservationFacilities.objects.get(id=pk)
+    approveConsul.is_done = True
+    approveConsul.save()
+    Messages.objects.create(
+        user=request.user,
+        to=approveConsul.user,
+        message=f"Your Reservation is Done the Results will be \
+            Uploaded if there is one",
+        )
+    return redirect("admin")
+
+@login_required(login_url="login")
+def CheckReservation(request):
+    reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
+        Q(is_approve=False)).filter(is_cancelled=False).order_by('schedule').order_by('date_created')
+    context = {"reservation": reservation}
+    return render(request, "reservation/reservation_admin.html", context)
 
 # Download
 
