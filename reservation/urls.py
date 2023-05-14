@@ -41,11 +41,18 @@ urlpatterns = [
 
 
     path('approvereservation/<str:pk>', views.ApproveReservation, name='approveres'),
+    path('cancelreservation/<str:pk>', views.CancelReservationAdmin, name='cancelres'),
     path('donereservation/<str:pk>', views.DoneConsultation, name='doneres'),
-    
+
+    # Billing
+    path('Checkout/', views.Checkout, name='checkout'),
+    path('paypal-return/', views.paypal_return, name='paypal-return'),
+    path('paypal-cancel/', views.paypal_cancel, name='paypal-cancel'),
+    path('billing/', views.BillingList, name='billing'),
+
     # DOWNLOAD
     path('download/<int:document_id>/', views.download, name='download'),
-    path('report/', views.report, name='report'),
+    path('report/<int:pk>/', views.report, name='report'),
     # AUTH
     path("register/", views.Register, name="register"),
     path("login/", views.Login, name="login"),
@@ -53,6 +60,9 @@ urlpatterns = [
     # ADMIN
     path('admin/', views.adminpage, name='admin'),
     path('adminreservation/', views.CheckReservation, name='adminreservation'),
+    path('admincancelreservation/', views.CheckCancelReservation, name='admincancelreservation'),
+    path("adminupload_labresults/", views.UploadResultsAdmin, name="adminupload_labresults"),
+
 ]
 
 

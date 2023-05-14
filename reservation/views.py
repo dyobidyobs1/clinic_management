@@ -16,27 +16,99 @@ from django.db.models import Q
 from django.http import FileResponse
 from fpdf import  FPDF
 
-# Print PDF
-def report(request):
+
+# Paypal
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
+
+# Paypal Integration
+@login_required(login_url="login")
+def Checkout(request):
+    host = request.get_host()
+    invoice_str = create_rand_id()
+    locale.setlocale(locale.LC_ALL, 'fil-PH')
     reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
-        Q(is_approve=True)).filter(is_done=False)
-    print(reservation)
-    pdf = FPDF('P', 'mm', (214.63, 219.71))
+        Q(is_approve=True)).filter(is_done=False).filter(is_cancelled=False).filter(is_bill_generated=False)
+    
+    total_amount = 0
+    for res in reservation:
+        total_amount += res.facility.facility_price
+
+    total_amountstr = locale.currency(total_amount, grouping=True)
+
+    billing = Billing.objects.filter(reference_number=invoice_str)
+    print(len(billing))
+    if len(billing) == 0:
+        Billing.objects.create(
+            user=request.user,
+            reference_number=invoice_str,
+            total_payment=total_amount
+        )
+        for res in reservation:
+            reservations = ReservationFacilities.objects.get(id=res.id)
+            reservations.reference_number = invoice_str
+            reservations.save()
+
+    paypal_dict = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': '%.2f' % total_amount,
+        'item_name': 'Reservation Payment',
+        'invoice': invoice_str,
+        'currency_code': 'PHP',
+        'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
+        'return_url': 'http://{}{}'.format(host, reverse('paypal-return')),
+        'cancel_return': 'http://{}{}'.format(host, reverse('paypal-cancel')),
+    }
+    
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"reservation": reservation, "total_amount": total_amountstr, "form" : form}
+    return render(request, "reservation/patient/check_out_patient.html", context)
+
+@login_required(login_url="login")
+def paypal_return(request):
+    messages.success(request, 'You\'ve successfully made a payment!')
+    return redirect('index')
+
+@login_required(login_url="login")
+def paypal_cancel(request):
+    messages.error(request, 'You cancel your transaction')
+    return redirect('index')
+
+
+@login_required(login_url="login")
+def BillingList(request):
+    bill = Billing.objects.filter(Q(request=request.user) and Q(is_generated = True)).order_by("-date_created")
+    context = {"results": bill}
+    return render(request, "reservation/patient/billing.html", context)
+
+
+# Print PDF
+@login_required(login_url="login")
+def report(request, pk):
+    bill_generated = Billing.objects.get(id=pk)
+    res = ReservationFacilities.objects.filter(reference_number=bill_generated.reference_number).filter(is_bill_generated=True)
+
+    locale.setlocale(locale.LC_ALL, 'fil-PH')
+    total_amountstr = locale.currency(bill_generated.total_payment, grouping=True)
+    pdf = FPDF('P', 'mm', (114.63, 119.71))
     pdf.add_page()
-    pdf.set_font('arial', 'B', 16)
+    pdf.add_font("DejaVuSans", fname="DejaVuSans.ttf")
+    pdf.set_font("DejaVuSans", size=16)
     pdf.cell(40, 10, '',0,1)
-    pdf.set_font('arial', '', 12)
-    pdf.cell(200, 8, f"{'Item'.ljust(30)}  {'Amount'.rjust(20)}", 0, 1)
-    pdf.line(10, 30, 150, 30)
-    pdf.line(10, 38, 150, 38)
-    for line in reservation:
-        text = str(line.facility.price)
-        pdf.cell(200, 8, f"Facility: {line.facility.facility_name.ljust(30)} Price: {text.rjust(20)}", 0, 1)
+    pdf.set_font("DejaVuSans", size=12)
+    pdf.cell(100, 8, f"{'Invoice Number'.ljust(20)}  {bill_generated.reference_number.rjust(10)}", 0, 1)
+    pdf.cell(100, 9, f"{'Transaction Number'.ljust(20)}  {bill_generated.transac_id.rjust(10)}", 0, 1)
+    pdf.cell(100, 10, f"{'Total Amount'.ljust(20)}  {total_amountstr.rjust(10)}", 0, 1)
+    for line in res:
+        text = str(line.facility.price())
+        pdf.cell(100, 8, f"Facility: {line.facility.facility_name.ljust(20)}", 0, 1)
+        pdf.cell(100, 10, f"Price: {text.rjust(20)} Schedule: {line.date().ljust(10)}", 0, 1)
+        pdf.line(1, 38, 119, 38)
 
-    pdf.output('invoice.pdf', 'F')
-    return FileResponse(open('invoice.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
-
-# Auth
+    pdf.output(f'{bill_generated.reference_number}.pdf', 'F')
+    return FileResponse(open(f'{bill_generated.reference_number}.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+    
+# AUTH
 def Register(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
@@ -135,6 +207,7 @@ def ViewConsultation(request):
     context = {"details": doctors}
     return render(request, "reservation/patient/view_consultation.html", context)
 
+@login_required(login_url="login")
 def AddConsultation(request, pk):
     doctor = DoctorDetails.objects.get(rndid=pk)
     patient = UserDetails.objects.get(user=request.user)
@@ -173,6 +246,7 @@ def PendingConsultation(request):
 def CancelConsultation(request, pk):
     approveConsul = ReserveConsulation.objects.get(id=pk)
     approveConsul.is_cancelled = True
+    
     approveConsul.save()
     Messages.objects.create(
         user=request.user,
@@ -184,6 +258,7 @@ def CancelConsultation(request, pk):
 def CancelReservation(request, pk):
     approvefacility = ReservationFacilities.objects.get(id=pk)
     approvefacility.is_cancelled = True
+    approvefacility.is_cancelled_by_admin = True
     approvefacility.save()
     Messages.objects.create(
         user=request.user,
@@ -211,7 +286,7 @@ def ConsulHistory(request):
 @login_required(login_url="login")
 def LaboratoryResults(request):
     fullname = f'{request.user.userdetails.first_name} {request.user.userdetails.middle_name} {request.user.userdetails.last_name}'
-    results = Results.objects.filter(patient=fullname)
+    results = Results.objects.filter(patient=fullname).order_by("-date")
     print(results)
     context = {"results": results}
     return render(request, "reservation/patient/laboratory_results.html", context)
@@ -245,7 +320,10 @@ def MessagesPatient(request):
 
 @login_required(login_url="login")
 def PatientSchedule(request):
-    return render(request, "reservation/patient/patient_schedule.html")
+    consultation = ReservationFacilities.objects.filter(
+        Q(user=request.user) and Q(is_approve=True)).filter(is_done=False).filter(is_cancelled_by_admin=False).filter(is_bill_generated=True).order_by('-schedule')
+    context = {"reservation": consultation}
+    return render(request, "reservation/patient/patient_schedule.html", context)
 
 # Doctors
 @login_required(login_url="login")
@@ -370,7 +448,20 @@ def ApproveReservation(request, pk):
         message=f"Your Reservation Schedule has been approved by \
             {request.user}",
         )
-    return redirect("admin")
+    return redirect("adminreservation")
+
+@login_required(login_url="login")
+def CancelReservationAdmin(request, pk):
+    approvefacility = ReservationFacilities.objects.get(id=pk)
+    approvefacility.is_cancelled_by_admin = True
+    approvefacility.is_cancelled = True
+    approvefacility.save()
+    Messages.objects.create(
+        user=request.user,
+        to=approvefacility.user,
+        message=f"Your Reservation is Cancelled by Admin")
+    return redirect("admincancelreservation")
+
 
 @login_required(login_url="login")
 def DoneReservation(request, pk):
@@ -391,6 +482,30 @@ def CheckReservation(request):
         Q(is_approve=False)).filter(is_cancelled=False).order_by('schedule').order_by('date_created')
     context = {"reservation": reservation}
     return render(request, "reservation/reservation_admin.html", context)
+
+@login_required(login_url="login")
+def CheckCancelReservation(request):
+    reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
+        Q(is_approve=True)).filter(is_cancelled_by_admin=False).order_by('schedule').order_by('date_created')
+    context = {"reservation": reservation}
+    return render(request, "reservation/reservation_admin_cancel.html", context)
+
+@login_required(login_url="login")
+def UploadResultsAdmin(request):
+    uploadresultform = UploadResultsForm()
+    print(uploadresultform)
+    if request.method == "POST":
+        uploadresultform = UploadResultsForm(request.POST, request.FILES)
+        print(uploadresultform)
+        print(uploadresultform.is_valid())
+        if uploadresultform.is_valid():
+            uploadresultform.is_facilty = True
+            uploadresultform.save(commit=False).doctor = request.user
+            uploadresultform.save()
+        return redirect("adminreservation")
+    context = {"form" : uploadresultform}
+    return render(request, "reservation/upload_results_admin.html", context)
+
 
 # Download
 

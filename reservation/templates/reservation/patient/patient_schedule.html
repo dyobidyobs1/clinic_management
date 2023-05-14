@@ -18,7 +18,7 @@
         {% for i in reservation %}
         <div class="event_item">
             <div class="ei_Dot"></div>
-            <div class="ei_Title">{{i.patient}}</div>
+            <div class="ei_Title">{{i.facility.facility_name}}</div>
             <div class="ei_Copy">{{i.date}}</div>
         </div>
         {% endfor %}

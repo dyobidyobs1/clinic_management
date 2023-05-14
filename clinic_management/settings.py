@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-1++zxvmldmz==bf2u99%)2r18zrxd8@n8=m3@kgq)b9)f&5eqd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'paypal.standard.ipn',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -150,6 +151,14 @@ DATE_INPUT_FORMATS = [
     "%d %B %Y",  # '25 October 2006'
     "%d %B, %Y",  # '25 October, 2006'
 ]
+
+# Paypal Settings
+PAYPAL_TEST = True
+
+PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
+
+CSRF_TRUSTED_ORIGINS = ['https://b263-136-158-11-76.ngrok-free.app']
+CORS_ORIGIN_WHITELIST = ['https://b263-136-158-11-76.ngrok-free.app']
 
 # DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 

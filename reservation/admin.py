@@ -37,7 +37,6 @@ class UserAdminConfig(UserAdmin):
 
 
 admin.site.register(CustomUser, UserAdminConfig)
-admin.site.register(ReservationFacilities)
 admin.site.register(ReserveConsulation)
 admin.site.register(Results)
 admin.site.register(Services)
@@ -49,4 +48,9 @@ admin.site.register(Messages)
 
 @admin.register(Billing)
 class BillingAdmin(admin.ModelAdmin):
+    readonly_fields = ["reference_number","transac_id"]
+
+
+@admin.register(ReservationFacilities)
+class ReservationFacilitiesAdmin(admin.ModelAdmin):
     readonly_fields = ["reference_number"]

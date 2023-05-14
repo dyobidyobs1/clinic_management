@@ -26,6 +26,12 @@
                 <li>
                   <a href="{% url 'adminreservation' %}">Reservation</a>
                 </li>
+                <li>
+                  <a href="{% url 'admincancelreservation' %}">Cancel Reservation</a>
+                </li>
+                <li>
+                  <a href="{% url 'adminupload_labresults' %}">Upload Laboratory Result</a>
+                </li>
                 {% endif %}
                 <li>
                   <a href="{% url 'logout' %}">Logout</a>
@@ -70,6 +76,12 @@
                 </li>
                 <li>
                   <a href="{% url 'labresults' %}">Laboratory Results</a>
+                </li>
+                <li>
+                  <a href="{% url 'checkout' %}">Checkout</a>
+                </li>
+                <li>
+                  <a href="{% url 'billing' %}">Billing</a>
                 </li>
                 <li>
                   <a href="{% url 'messagespatient' %}">Messages</a>

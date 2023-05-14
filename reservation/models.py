@@ -117,10 +117,13 @@ class ReservationFacilities(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     facility = models.ForeignKey(Facilites, on_delete=models.CASCADE, null=True, blank=True)
     schedule = models.DateTimeField()
+    reference_number = models.CharField(max_length=255, editable=False, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     is_approve = models.BooleanField(default=False)
     is_done = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
+    is_cancelled_by_admin = models.BooleanField(default=False)
+    is_bill_generated = models.BooleanField(default=False)
 
     def date(self):
         locale.setlocale(locale.LC_ALL, 'en-US')
@@ -151,10 +154,12 @@ class ReserveConsulation(models.Model):
 
 class Billing(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    reference_number = models.CharField(max_length=13, editable=False, null=True, blank=True, 
-        default=create_rand_id)
+    reference_number = models.CharField(max_length=255, editable=False, null=True, blank=True)
+    transac_id = models.CharField(max_length=255, editable=False, null=True, blank=True)
     total_payment = models.DecimalField(max_digits=10, decimal_places=2)
-    
+    is_generated = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f"{(self.user.username.upper())} has a payable of {locale.currency(self.total_payment, grouping=True)} \

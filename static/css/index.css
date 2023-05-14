@@ -502,6 +502,14 @@ td{
 	text-align: center;
 }
 
+.l-card__text_checkout p {
+	font-size: 30px;
+	font-family: "Vollkorn", serif;
+	font-weight: 400;
+	color: #3f3f55;
+	text-align: center;
+}
+
 .l-card-messages .l-card__text p::after {
 	content: "\201D";
 	display: inline;
@@ -510,6 +518,16 @@ td{
 
 .l-card-messages .l-card__text p::before {
 	content: "\201C";
+	display: inline;
+	color: #999;
+}
+
+.l-card-messages .l-card__text_checkout p::after {
+	display: inline;
+	color: #999;
+}
+
+.l-card-messages .l-card__text_checkout p::before {
 	display: inline;
 	color: #999;
 }

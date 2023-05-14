@@ -1,0 +1,28 @@
+{% extends 'reservation/base.html' %}
+{% block title %}
+	Checkout
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Checkout</h1>
+    <h4 style="margin-bottom: 1rem;">Total:  {{total_amount}}</h4>
+    <p>{{form.render}}</p>
+    {% for i in reservation %}
+    <main style="margin-top: 1rem;" class="l-card-messages">
+        <section class="l-card__text_checkout">
+            <p>
+               {{i.facility.facility_name}}
+            </p>
+        </section>
+        <section class="l-card__user">
+            <div class="l-card__userInfo">
+                <p>Price: <span style="text-transform:uppercase"> {{i.facility.price}}</span></p>
+                <p>Schedule: <span style="text-transform:uppercase"> {{i.date}}</span></p>
+            </div>
+        </section>
+    </main>
+    {% endfor %}
+
+    <div class="hidden">y</div>
+</div>
+{% endblock %}
