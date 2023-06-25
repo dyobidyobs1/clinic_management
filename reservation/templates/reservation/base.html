@@ -15,7 +15,7 @@
 <body>
     <nav class="navbar">
         <a class="brand"><img 
-          src="" alt="Logo" height="70px" width="80px"></a>
+          src="{% static 'image/logo.jpg' %}" alt="Logo" height="70px" width="80px"></a>
           <ul>
             {% if user.is_authenticated %}
               {% if user.is_staff %}
@@ -60,7 +60,7 @@
                   <a href="{% url 'index' %}">Home</a>
                 </li>
                 <li>
-                  <a href="{% url 'reservation_view' %}">Facilities</a>
+                  <a href="{% url 'reservation_view' %}">Services</a>
                 </li>
                 <li>
                   <a href="{% url 'consultation_view' %}">Consultation</a>
@@ -69,19 +69,27 @@
                   <a href="{% url 'schedulept' %}">Schedule</a>
                 </li>
                 <li>
-                  <a href="{% url 'reservation' %}">Pending</a>
+                  <a href="#">Pending &dtrif;</a>
+                  <ul class="dropdown">
+                    <li><a href="{% url 'reservation' %}">Pending Transaction </a></li>
+                    <li><a href="{% url 'consultation' %}">Pending Consultation</a></li>
+                    <li><a href="{% url 'reservation_history' %}">Transaction History</a></li>
+                    <li><a href="{% url 'consultation_history' %}">Consultation History</a></li>
+                  </ul>
                 </li>
-                <li>
-                  <a href="{% url 'reservation_history' %}">History</a>
+                <li class="dd">
+                  <a href="#">Perscription/Results &dtrif;</a>
+                  <ul class="dropdown">
+                    <li><a href="{% url 'labresults' %}">Laboratory Results</a></li>
+                    <li><a href="">Perscription</a></li>
+                  </ul>
                 </li>
-                <li>
-                  <a href="{% url 'labresults' %}">Laboratory Results</a>
-                </li>
-                <li>
-                  <a href="{% url 'checkout' %}">Checkout</a>
-                </li>
-                <li>
-                  <a href="{% url 'billing' %}">Billing</a>
+                <li class="dd">
+                  <a href="#">Checkout/Billing History &dtrif;</a>
+                  <ul class="dropdown">
+                    <li><a href="{% url 'checkout' %}">Checkout</a></li>
+                    <li><a href="{% url 'billing' %}">Billing History</a></li>
+                  </ul>
                 </li>
                 <li>
                   <a href="{% url 'messagespatient' %}">Messages</a>
@@ -102,6 +110,12 @@
               </li>
               <li>
                   <a href="{% url 'register' %}">Register</a>
+              </li>
+              <li>
+                <a href="{% url 'contact' %}">Contact</a>
+              </li>
+              <li>
+                <a href="{% url 'about' %}">About Us</a>
               </li>
             {% endif %}
           </ul>

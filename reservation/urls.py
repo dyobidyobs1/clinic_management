@@ -8,6 +8,8 @@ urlpatterns = [
     path("", views.HomePatient, name="index"),
     path("doctors", views.HomeDoctor, name="doctorsindex"),
     path("admin", views.HomeAdmin, name="adminindex"),
+    path("about", views.AboutUs, name="about"),
+    path("contact", views.Contact, name="contact"),
     path("messagesdoctor", views.MessagesDoctor, name="messagesdoctor"),
     path("messagespatient", views.MessagesPatient, name="messagespatient"),
 

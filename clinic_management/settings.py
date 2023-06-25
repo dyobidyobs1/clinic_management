@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # "cloudinary_storage",
-    # "cloudinary",
+    "cloudinary_storage",
+    "cloudinary",
     'reservation'
 ]
 
@@ -160,10 +160,10 @@ PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
 CSRF_TRUSTED_ORIGINS = ['https://b263-136-158-11-76.ngrok-free.app']
 CORS_ORIGIN_WHITELIST = ['https://b263-136-158-11-76.ngrok-free.app']
 
-# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-# CLOUDINARY_STORAGE = {
-#     "CLOUD_NAME": "dmagk9gck",
-#     "API_KEY": "964986345641993",
-#     "API_SECRET": "sDSJ1IXtdVjMrMAkGxABuvS2wmo",
-# }
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": "dmagk9gck",
+    "API_KEY": "964986345641993",
+    "API_SECRET": "sDSJ1IXtdVjMrMAkGxABuvS2wmo",
+}

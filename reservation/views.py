@@ -101,7 +101,7 @@ def report(request, pk):
     pdf.cell(100, 10, f"{'Total Amount'.ljust(20)}  {total_amountstr.rjust(10)}", 0, 1)
     for line in res:
         text = str(line.facility.price())
-        pdf.cell(100, 8, f"Facility: {line.facility.facility_name.ljust(20)}", 0, 1)
+        pdf.cell(100, 8, f"Services: {line.facility.facility_name.ljust(20)}", 0, 1)
         pdf.cell(100, 10, f"Price: {text.rjust(20)} Schedule: {line.date().ljust(10)}", 0, 1)
         pdf.line(1, 38, 119, 38)
 
@@ -168,6 +168,12 @@ def Logout(request):
     logout(request)
     return redirect("login")
 
+def AboutUs(request):
+    return render(request, "reservation/about_us.html")
+
+def Contact(request):
+    return render(request, "reservation/contact.html")
+
 # Patient
 @login_required(login_url="login")
 def HomePatient(request):
@@ -181,7 +187,7 @@ def HomePatient(request):
 
 @login_required(login_url="login")
 def AddReservation(request, pk):
-    facility = Facilites.objects.get(id=pk)
+    facility = Services.objects.get(id=pk)
     print("facility", facility)
     reservationform = ReservationFormFacilities()
     print("reservationform", reservationform)
@@ -197,7 +203,7 @@ def AddReservation(request, pk):
 
 @login_required(login_url="login")
 def ViewFacility(request):
-    facility = Facilites.objects.all()
+    facility = Services.objects.all()
     context = {"details": facility}
     return render(request, "reservation/patient/view_reservation.html", context)
 
@@ -294,8 +300,17 @@ def LaboratoryResults(request):
 
 @login_required(login_url="login")
 def ProfilePatient(request):
-    profile_details = UserDetails.objects.get(user=request.user)
-    context = {"details": profile_details}
+    random_id = create_rand_id()
+    context = {}
+    profile_details = UserDetails.objects.filter(user=request.user)
+    print(profile_details)
+    if  profile_details:
+        if profile_details[0].rndid:
+            context = {"details": profile_details[0]}
+    else:
+        UserDetails.objects.create(user=request.user, rndid=random_id)
+        profile_details = UserDetails.objects.filter(user=request.user)
+        context = {"details": profile_details[0]}
     return render(request, "reservation/patient/profile.html", context)
 
 @login_required(login_url="login")

@@ -5,10 +5,12 @@ cloudinary==1.32.0
 defusedxml==0.7.1
 dj3-cloudinary-storage==0.0.6
 Django==4.1.7
+django-paypal==2.0
 fonttools==4.39.3
 fpdf2==2.7.3
 idna==3.4
 Pillow==9.5.0
+pytz==2023.3
 requests==2.28.2
 six==1.16.0
 sqlparse==0.4.3

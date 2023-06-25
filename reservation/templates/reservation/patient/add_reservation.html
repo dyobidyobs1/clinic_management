@@ -4,11 +4,11 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Facility Reservation</h1>
+    <h1>Services Reservation</h1>
     <div class="section-delete">
         <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <label>Facility: </label>
+        <label>Services: </label>
         <input name="facility" type="text" placeholder="{{details}}" value="{{details}}" disabled>
         <label>Schedule: </label>
         {{form.schedule}}

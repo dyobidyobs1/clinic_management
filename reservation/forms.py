@@ -12,8 +12,9 @@ class DateInput(forms.DateInput):
 
 class CreateUserForm(UserCreationForm):
     class Meta:
-        model = User
-        fields = ["username", "password1", "password2"]
+        model = CustomUser
+        fields = ["username", "email", "password1", "password2"]
+        # fields = ["username", "password1", "password2"]
 
 
 class ReservationFormFacilities(forms.ModelForm):

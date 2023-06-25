@@ -4,17 +4,17 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Facility Reservation</h1>
+    <h1>Services Reservation</h1>
     {% for i in details %}
     <main class="l-card-consultation">
         <section class="l-card__text">
             <p>
-               {{i.facility_description}}
+               {{i.service_description}}
             </p>
         </section>
         <section class="l-card__user">
             <div class="l-card__userInfo">
-                <span>{{i.facility_name}} {{i.price}} </span>
+                <span>{{i.service_name}} {{i.price}} </span>
                 <span>Schedule a Date <a href="{% url 'reservation_add' i.id %}">Here...</a></span>
             </div>
         </section>

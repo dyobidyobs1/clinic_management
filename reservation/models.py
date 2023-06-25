@@ -15,12 +15,20 @@ def create_rand_id():
 class CustomUser(AbstractUser):
     is_doctor = models.BooleanField(default=False)
 
+class ReservationSettings(models.Model):
+    reservation_limit = models.IntegerField()
+
+
 # ADMIN
 class Services(models.Model):
     service_name = models.CharField(max_length=255)
     service_description = models.TextField()
     service_price = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='uploads/services', blank=True, null=True)
 
+    def price(self):
+        locale.setlocale(locale.LC_ALL, 'fil-PH')
+        return locale.currency(self.service_price, grouping=True)
 
     def __str__(self):
         return f"{self.service_name} {locale.currency(self.service_price, grouping=True)}"
@@ -51,10 +59,10 @@ class DoctorDetails(models.Model):
     )
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    gender = models.CharField(max_length=1, choices=GENDER)
+    first_name = models.CharField(max_length=50, null=True)
+    middle_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
+    gender = models.CharField(max_length=1, choices=GENDER, null=True)
     address = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=50, null=True)
     bdate = models.DateTimeField(null=True, blank=True)
@@ -93,10 +101,10 @@ class UserDetails(models.Model):
     )
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    gender = models.CharField(max_length=1, choices=GENDER)
+    first_name = models.CharField(max_length=50, null=True)
+    middle_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
+    gender = models.CharField(max_length=1, choices=GENDER, null=True)
     address = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=50, null=True)
     bdate = models.DateTimeField(null=True, blank=True)
@@ -115,7 +123,7 @@ class UserDetails(models.Model):
 
 class ReservationFacilities(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    facility = models.ForeignKey(Facilites, on_delete=models.CASCADE, null=True, blank=True)
+    facility = models.ForeignKey(Services, on_delete=models.CASCADE, null=True, blank=True)
     schedule = models.DateTimeField()
     reference_number = models.CharField(max_length=255, editable=False, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
