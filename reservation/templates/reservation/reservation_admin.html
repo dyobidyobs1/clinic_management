@@ -14,7 +14,7 @@
                 <th class="hide" scope="col">Schedule</th>
                 <th class="hide" scope="col">Price</th>
                 <th scope="col">Status</th>
-                <th scope="col">Action</th>
+                <!-- <th scope="col">Action</th> -->
               </tr>
             </thead>
           </table>
@@ -24,18 +24,18 @@
             <tbody>
               <tr>
                 {% for i in reservation %}
-                <th>{{i.facility.facility_name}}</th>
+                <th>{{i.facility.service_name}}</th>
                 <td>{{i.date}}</td>
-                <td>{{i.facility.facility_price}}</td>
+                <td>{{i.facility.price}}</td>
                 <td>Pending</td>
-                <td>
-                  <a
+                <!-- <td> -->
+                  <!-- <a
                     class="button-link"
                     href="{% url 'approveres' i.id %}"
                     class="crud"
                     >Approve</a
-                  >
-                </td>
+                  > -->
+                <!-- </td> -->
               </tr>
             </tbody>
             {% endfor %}

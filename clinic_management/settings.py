@@ -157,8 +157,8 @@ PAYPAL_TEST = True
 
 PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
 
-CSRF_TRUSTED_ORIGINS = ['https://b263-136-158-11-76.ngrok-free.app']
-CORS_ORIGIN_WHITELIST = ['https://b263-136-158-11-76.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://b767-136-158-11-16.ngrok-free.app']
+CORS_ORIGIN_WHITELIST = ['https://b767-136-158-11-16.ngrok-free.app']
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
@@ -167,3 +167,16 @@ CLOUDINARY_STORAGE = {
     "API_KEY": "964986345641993",
     "API_SECRET": "sDSJ1IXtdVjMrMAkGxABuvS2wmo",
 }
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dict2.1.teamone@gmail.com'
+EMAIL_HOST_PASSWORD = 'artndyuvmmgofmmo'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+
+DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'

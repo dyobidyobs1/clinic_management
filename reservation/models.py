@@ -109,6 +109,10 @@ class UserDetails(models.Model):
     email = models.CharField(max_length=50, null=True)
     bdate = models.DateTimeField(null=True, blank=True)
     placebirth = models.CharField(max_length=50, null=True)
+    is_verified = models.BooleanField(default=False)
+    token = models.CharField(
+        max_length=100, null=True, blank=True
+    )
     rndid = models.CharField(
         max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True
     )

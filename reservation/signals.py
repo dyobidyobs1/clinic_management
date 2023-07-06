@@ -4,6 +4,7 @@ from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 
 from .models import *
 from .views import report
+from .utils import *
 
 from django.http import FileResponse
 from fpdf import  FPDF
@@ -25,6 +26,7 @@ def payment_received(sender, **kwargs):
         res = ReservationFacilities.objects.filter(reference_number=ipn_obj.invoice)
         for r in res:
             reservation = ReservationFacilities.objects.get(id=r.id)
+            reservation.is_approve = True
             reservation.is_bill_generated = True
             reservation.save()
         
@@ -33,6 +35,17 @@ def payment_received(sender, **kwargs):
         to=bill_generated.user,
         message=f"You Successfully Paid your Reservations and this is the Invoice {ipn_obj.invoice} \
             and the Paypal Transaction ID {ipn_obj.txn_id}")
+        
+        # Email
+        subject = f'Invoice {ipn_obj.invoice}'
+        message = f"You Successfully Paid your \n Reservations and this is the Invoice {ipn_obj.invoice}\
+            \n and the  Paypal Transaction ID {ipn_obj.txn_id}"
+
+        recipients = [bill_generated.user.email, ]
+
+            
+        send_email(subject, message, recipients)
+        
         
         print("test valid")
         print(ipn_obj.invoice)

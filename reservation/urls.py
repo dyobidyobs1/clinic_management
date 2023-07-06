@@ -65,6 +65,9 @@ urlpatterns = [
     path('admincancelreservation/', views.CheckCancelReservation, name='admincancelreservation'),
     path("adminupload_labresults/", views.UploadResultsAdmin, name="adminupload_labresults"),
 
+    # Verify
+    path('verify/<str:token>', views.Verify, name='verify'),
+
 ]
 
 

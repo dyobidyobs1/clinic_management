@@ -9,12 +9,15 @@ from django.urls import reverse
 
 from .forms import *
 from .models import *
+from .utils import *
 
 from django.db.models import Q
 
 
 from django.http import FileResponse
 from fpdf import  FPDF
+
+import time
 
 
 # Paypal
@@ -28,11 +31,11 @@ def Checkout(request):
     invoice_str = create_rand_id()
     locale.setlocale(locale.LC_ALL, 'fil-PH')
     reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
-        Q(is_approve=True)).filter(is_done=False).filter(is_cancelled=False).filter(is_bill_generated=False)
+        Q(is_approve=False)).filter(is_done=False).filter(is_cancelled=False).filter(is_bill_generated=False)
     
     total_amount = 0
     for res in reservation:
-        total_amount += res.facility.facility_price
+        total_amount += res.facility.service_price
 
     total_amountstr = locale.currency(total_amount, grouping=True)
 
@@ -101,7 +104,7 @@ def report(request, pk):
     pdf.cell(100, 10, f"{'Total Amount'.ljust(20)}  {total_amountstr.rjust(10)}", 0, 1)
     for line in res:
         text = str(line.facility.price())
-        pdf.cell(100, 8, f"Services: {line.facility.facility_name.ljust(20)}", 0, 1)
+        pdf.cell(100, 8, f"Services: {line.facility.service_name.ljust(20)}", 0, 1)
         pdf.cell(100, 10, f"Price: {text.rjust(20)} Schedule: {line.date().ljust(10)}", 0, 1)
         pdf.line(1, 38, 119, 38)
 
@@ -115,17 +118,24 @@ def Register(request):
             if request.user.is_superuser:
                 return redirect("adminindex")
         elif request.user.is_doctor:
-                return redirect("doctorsindex")
+                return redirect("consultation_doctors")
         else:
             return redirect("index")
     else:
+        random_id = create_rand_id()
+        host = request.get_host()
         form = CreateUserForm()
         if request.method == "POST":
             form = CreateUserForm(request.POST)
             if form.is_valid():
-                form.save()
+                username = form.save()
+                print(username)
                 user = form.cleaned_data.get("username")
+                email = form.cleaned_data.get("email")
                 messages.success(request, "Account Created For " + user)
+                messages.success(request, "Please verify your Email in " + email)
+                UserDetails.objects.create(user=username, token=random_id)
+                send_email_token(email, random_id, host)
                 return redirect("login")
             else:
                 messages.info(request, "Make Sure your Credentials is Correct or Valid")
@@ -135,12 +145,18 @@ def Register(request):
     return render(request, "reservation/register.html", context)
 
 def Login(request):
+    # subject = 'TEST Subject'
+    # message = 'Test Message'
+    # recipients = ['joaquinzaki21@gmail.com']
+    # test_send(subject, message, recipients)
+
+
     if request.user.is_authenticated:
         if request.user.is_staff:
             if request.user.is_superuser:
                 return redirect("adminindex")
         elif request.user.is_doctor:
-                return redirect("doctorsindex")
+                return redirect("consultation_doctors")
         else:
             return redirect("index")
     else:
@@ -154,7 +170,7 @@ def Login(request):
                     if user.is_superuser:
                         return redirect("admin")
                 elif user.is_doctor:
-                    return redirect("doctorsindex")
+                    return redirect("consultation_doctors")
                 else:
                     return redirect("index")
             else:
@@ -181,7 +197,7 @@ def HomePatient(request):
         if request.user.is_superuser:
             return redirect("adminindex")
     elif request.user.is_doctor:
-        return redirect("doctorsindex")
+        return redirect("consultation_doctors")
     else:
         return render(request, "reservation/patient/patient_home.html")
 
@@ -329,6 +345,7 @@ def EditProfilePatient(request, pk):
 
 @login_required(login_url="login")
 def MessagesPatient(request):
+    print(request.user.email)
     messages = Messages.objects.filter(to=request.user).order_by('-date')
     context = {"messages": messages}
     return render(request, "reservation/patient/patient_messages.html", context)
@@ -336,7 +353,7 @@ def MessagesPatient(request):
 @login_required(login_url="login")
 def PatientSchedule(request):
     consultation = ReservationFacilities.objects.filter(
-        Q(user=request.user) and Q(is_approve=True)).filter(is_done=False).filter(is_cancelled_by_admin=False).filter(is_bill_generated=True).order_by('-schedule')
+        Q(user=request.user) and Q(is_approve=True)).filter(is_done=False).filter(is_cancelled_by_admin=False).filter(is_bill_generated=True).order_by('schedule')
     context = {"reservation": consultation}
     return render(request, "reservation/patient/patient_schedule.html", context)
 
@@ -413,8 +430,17 @@ def ConsulsHistory(request):
     
 @login_required(login_url="login")
 def ProfileDoctor(request):
-    profile_details = DoctorDetails.objects.get(user=request.user)
-    context = {"details": profile_details}
+    random_id = create_rand_id()
+    context = {}
+    profile_details = DoctorDetails.objects.filter(user=request.user)
+    print(profile_details)
+    if  profile_details:
+        if profile_details[0].rndid:
+            context = {"details": profile_details[0]}
+    else:
+        DoctorDetails.objects.create(user=request.user, rndid=random_id)
+        profile_details = DoctorDetails.objects.filter(user=request.user)
+        context = {"details": profile_details[0]}
     return render(request, "reservation/doctors/doctors_profile.html", context)
 
 def EditProfileDoctor(request, pk):
@@ -532,3 +558,20 @@ def download(request, document_id):
     response = HttpResponse(document.result_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{document.result_file.name}"'
     return response
+
+
+# Verify Email
+def Verify(request, token):
+    try:
+        userDetails = UserDetails.objects.get(token=token)
+        userDetails.is_verified = True
+        userDetails.save()
+        messages.success(request, "Your Email is Verified!!!!")
+        return redirect('login')
+
+    
+    except Exception as e:
+        messages.info(request, "Invalid Token")
+        return redirect('login')
+    
+        
