@@ -832,3 +832,16 @@ td{
   /* border-left: 2px solid #3ca0e7; */
   transition: all 0.3s ease;
 }
+
+/* Contact Us */
+
+.des {
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.des img {
+  margin-right: 1rem;
+}

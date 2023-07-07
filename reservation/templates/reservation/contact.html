@@ -1,6 +1,17 @@
 {% extends 'reservation/base.html' %}
 {% block content %}
+{% load static %}
 <div class="container">
 	<h1>Contact Us</h1>
+	<div class="des">
+		<img src="{% static 'image/ContactUs.png' %}" alt="" height="600px" width="700px">
+		<form action="" method="POST" class="form">
+			{% csrf_token %}
+			<input name="email" type="email" placeholder="Email">
+			<input name="subject" type="text" placeholder="Subject">
+			<textarea name="body" id="" cols="30" rows="10" placeholder="Message"></textarea>
+			<button type="submit" id="login-button">Login</button>
+		</form>
+	</div>
 </div>
 {% endblock %}

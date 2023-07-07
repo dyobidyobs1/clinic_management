@@ -33,6 +33,13 @@ def Checkout(request):
     reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
         Q(is_approve=False)).filter(is_done=False).filter(is_cancelled=False).filter(is_bill_generated=False)
     
+
+    reservation_count = len(reservation)
+    limit = ReservationSettings.objects.get(id=1)
+    current = int(limit.reservation_current + reservation_count)
+    print(current)
+    limit.reservation_current = current
+
     total_amount = 0
     for res in reservation:
         total_amount += res.facility.service_price
@@ -41,16 +48,31 @@ def Checkout(request):
 
     billing = Billing.objects.filter(reference_number=invoice_str)
     print(len(billing))
-    if len(billing) == 0:
-        Billing.objects.create(
-            user=request.user,
-            reference_number=invoice_str,
-            total_payment=total_amount
-        )
-        for res in reservation:
-            reservations = ReservationFacilities.objects.get(id=res.id)
-            reservations.reference_number = invoice_str
-            reservations.save()
+    if current <= limit.reservation_limit:
+        limit.save()
+        if len(billing) == 0:
+            Billing.objects.create(
+                user=request.user,
+                reference_number=invoice_str,
+                total_payment=total_amount
+            )
+            for res in reservation:
+                reservations = ReservationFacilities.objects.get(id=res.id)
+                reservations.reference_number = invoice_str
+                reservations.save()
+    else:
+        Messages.objects.create(
+        user=request.user,
+        to=request.user,
+        message=f"The Reservation Limit for today is Fulfilled")
+
+        # Email
+        subject = f'The Reservation Limit is Fulfilled'
+        message = f"Your Payment is not Successfull because the Reservation Limit is Fulfilled"
+
+        recipients = [request.user.email, ]
+    
+        send_email(subject, message, recipients)
 
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
@@ -165,14 +187,18 @@ def Login(request):
             password = request.POST.get("password")
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                login(request, user)
-                if user.is_staff:
-                    if user.is_superuser:
-                        return redirect("admin")
-                elif user.is_doctor:
-                    return redirect("consultation_doctors")
+                userDet = UserDetails.objects.get(user=user)
+                if not userDet.is_verified:
+                    messages.info(request, "Your Account is Not Verified")
                 else:
-                    return redirect("index")
+                    login(request, user)
+                    if user.is_staff:
+                        if user.is_superuser:
+                            return redirect("admin")
+                    elif user.is_doctor:
+                        return redirect("consultation_doctors")
+                    else:
+                        return redirect("index")
             else:
                 messages.info(request, "Username or Password is Incorrect")
 
@@ -574,4 +600,5 @@ def Verify(request, token):
         messages.info(request, "Invalid Token")
         return redirect('login')
     
-        
+def ContactUs(request):
+    return render(request, "reservation/contact.html")

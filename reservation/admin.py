@@ -45,6 +45,7 @@ admin.site.register(Speciality)
 admin.site.register(DoctorDetails)
 admin.site.register(UserDetails)
 admin.site.register(Messages)
+admin.site.register(ReservationSettings)
 
 @admin.register(Billing)
 class BillingAdmin(admin.ModelAdmin):

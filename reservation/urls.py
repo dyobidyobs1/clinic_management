@@ -67,7 +67,6 @@ urlpatterns = [
 
     # Verify
     path('verify/<str:token>', views.Verify, name='verify'),
-
 ]
 
 

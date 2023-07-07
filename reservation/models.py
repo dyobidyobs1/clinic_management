@@ -17,6 +17,18 @@ class CustomUser(AbstractUser):
 
 class ReservationSettings(models.Model):
     reservation_limit = models.IntegerField()
+    reservation_current = models.IntegerField()
+
+    def validate(self):
+        if self.reservation_limit < self.reservation_current:
+            return False
+        elif self.reservation_limit == self.reservation_current:
+            return True
+        else:
+            return True
+
+    def __str__(self):
+        return f'Limit: {self.reservation_limit} ------ Current: {self.reservation_current}'
 
 
 # ADMIN
