@@ -15,7 +15,7 @@
           {{form.result_file}}
 
             
-          <input name="patient" type="hidden" maxlength="255" required id="id_patient" value="{{reservation.user.userdetails.first_name}} {{reservation.user.userdetails.middle_name}} {{reservation.user.userdetails.last_name}}" hidden>
+          <input name="patient" type="hidden" maxlength="255" required id="id_patient" value="{{reservation.user.userdetails.last_name}}, {{reservation.user.userdetails.first_name}} {{reservation.user.userdetails.middle_name}}" hidden>
           <div class="btn-flex">
             <button type="submit" class="button-register">Upload</button>
             <button type="reset" class="button-register">Reset</button>

@@ -39,6 +39,7 @@ class UserAdminConfig(UserAdmin):
 admin.site.register(CustomUser, UserAdminConfig)
 admin.site.register(ReserveConsulation)
 admin.site.register(Results)
+admin.site.register(Perscription)
 admin.site.register(Services)
 admin.site.register(Facilites)
 admin.site.register(Speciality)

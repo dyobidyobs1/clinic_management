@@ -55,3 +55,8 @@ class UploadResultsForm(forms.ModelForm):
     class Meta:
         model = Results
         fields = "__all__"
+
+class PerscriptionForm(forms.ModelForm):
+    class Meta:
+        model = Perscription
+        fields = "__all__"

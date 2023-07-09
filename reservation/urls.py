@@ -34,12 +34,15 @@ urlpatterns = [
     # DOCTOR
     path("consultation_doctors", views.CheckConsultation, name="consultation_doctors"),
     path("upload_labresults/<str:pk>", views.UploadResults, name="upload_labresults"),
+    path("upload_perscription/<str:pk>", views.UploadPerscrip, name="upload_perscription"),
     path("consulhistory", views.ConsulsHistory, name="consulhistory"),
     path("profile_doctor", views.ProfileDoctor, name="profile_doctor"),
     path('editprofiledt/<str:pk>', views.EditProfileDoctor, name='editprofiledt'),
     path('scheduledoctor', views.DoctorSchedule, name='scheduledt'),
     path('approvecon/<str:pk>', views.ApproveConsultation, name='approvecon'),
     path('donecon/<str:pk>', views.DoneConsultation, name='donecon'),
+    path("resultshistory/", views.ResultsHistoryDocView, name="resultshistory"),
+    path("pershistory/", views.PerscriptionHistoryDocView, name="pershistory"),
 
 
     path('approvereservation/<str:pk>', views.ApproveReservation, name='approveres'),

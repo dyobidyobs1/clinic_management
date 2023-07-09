@@ -111,6 +111,19 @@ class Results(models.Model):
         date = self.date.strftime("%B %d, %Y")
         return f"A Result for {self.patient} on {date}"
 
+class Perscription(models.Model):
+    doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.CharField(max_length=255)
+    is_facility = models.BooleanField(default=False)
+    result_file = models.FileField(storage=fs)
+    description = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        locale.setlocale(locale.LC_ALL, 'en-US')
+        date = self.date.strftime("%B %d, %Y")
+        return f"A Perscription for {self.patient} on {date}"
+
 
 # PATIENT/USER
 class UserDetails(models.Model):

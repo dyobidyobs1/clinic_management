@@ -343,8 +343,15 @@ def LaboratoryResults(request):
     results = Results.objects.filter(patient=fullname).order_by("-date")
     print(results)
     context = {"results": results}
-    return render(request, "reservation/patient/laboratory_results.html", context)
+    return render(request, "reservation/patient/perscription.html", context)
 
+@login_required(login_url="login")
+def LaboratoryResults(request):
+    fullname = f'{request.user.userdetails.last_name}, {request.user.userdetails.first_name} {request.user.userdetails.middle_name}'
+    results = Results.objects.filter(patient=fullname).order_by("-date")
+    print(results)
+    context = {"results": results}
+    return render(request, "reservation/patient/laboratory_results.html", context)
 
 @login_required(login_url="login")
 def ProfilePatient(request):
@@ -458,6 +465,23 @@ def UploadResults(request, pk):
     return render(request, "reservation/doctors/upload_results.html", context)
 
 @login_required(login_url="login")
+def UploadPerscrip(request, pk):
+    consultation = ReserveConsulation.objects.get(id=pk)
+    uploadresultform = PerscriptionForm()
+    print(uploadresultform)
+    if request.method == "POST":
+        uploadresultform = PerscriptionForm(request.POST, request.FILES)
+        print(uploadresultform)
+        print(uploadresultform.is_valid())
+        if uploadresultform.is_valid():
+            uploadresultform.save(commit=False).doctor = request.user
+            uploadresultform.save()
+        return redirect("consulhistory")
+    context = {"reservation": consultation, "form" : uploadresultform}
+    return render(request, "reservation/doctors/perscription.html", context)
+
+
+@login_required(login_url="login")
 def ConsulsHistory(request):
     doctordetails = DoctorDetails.objects.get(user=request.user)
     consultation = ReserveConsulation.objects.filter(Q(doctors_id=doctordetails.rndid) and
@@ -506,6 +530,41 @@ def DoctorSchedule(request):
     print(consultation)
     context = {"reservation": consultation}
     return render(request, "reservation/doctors/doctors_schedule.html", context)
+
+@login_required(login_url="login")
+def ResultsHistoryDocView(request):
+    users = CustomUser.objects.filter(is_superuser=False).filter(is_doctor=False)
+    results = []
+    context = {"results": results, "users": users}
+    if request.method == "POST":
+        patient_filter = request.POST.get("patient_filter")
+        if patient_filter:
+            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            fullname = f'{patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name} {patient_filter2.userdetails.last_name}'
+            results = Results.objects.filter(patient=fullname).order_by("-date")
+            print(patient_filter)
+            print(patient_filter2)
+            context = {"results": results, "users": users}
+    print(results)
+    print(request.user)
+    return render(request, "reservation/doctors/patients_history_services.html", context)
+
+
+@login_required(login_url="login")
+def PerscriptionHistoryDocView(request):
+    users = CustomUser.objects.filter(is_superuser=False).filter(is_doctor=False)
+    results = []
+    context = {"results": results, "users": users}
+    if request.method == "POST":
+        patient_filter = request.POST.get("patient_filter")
+        if patient_filter:
+            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            fullname = f'{patient_filter2.userdetails.last_name}, {patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name}'
+            results = Perscription.objects.filter(patient=fullname).order_by("-date")
+            print(patient_filter)
+            print(patient_filter2)
+            context = {"results": results, "users": users}
+    return render(request, "reservation/doctors/patients_history_consultation.html", context)
 
 # Admin/Staff
 @login_required(login_url="login")

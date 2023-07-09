@@ -1,0 +1,36 @@
+{% extends 'reservation/base.html' %}
+{% block title %}
+	Results History
+{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Results History</h1>
+  <form action="" method="post">
+    {% csrf_token %}
+    <select name="patient_filter">
+      <option value="" selected>---------</option>
+      {% for user in users %}
+      <option value="{{user.id}}">{{user}}</option>
+      {% endfor %}
+      <input type="submit" value="Search">
+    </select>
+  </form>
+    {% for i in results %}
+    <main class="l-card-consultation">
+        <section class="l-card__text">
+            <p>
+                {{i.description}}
+            </p>
+        </section>
+        <section class="l-card__user">
+            <div class="l-card__userInfo">
+                <!-- <span>Dr. {{i.doctor}}</span> -->
+                <sub>{{i.date}}</sub>
+                <span>Download the Pdf <a href="{% url 'download' i.id %}">Here...</a></span>
+            </div>
+        </section>
+    </main>
+    {% endfor %}
+    <div class="hidden">y</div>
+</div>
+{% endblock %}

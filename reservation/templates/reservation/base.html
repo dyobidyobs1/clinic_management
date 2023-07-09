@@ -47,7 +47,14 @@
                   <a href="{% url 'scheduledt' %}">Schedule</a>
                 </li>
                 <li>
-                  <a href="{% url 'consulhistory' %}">Consultation History</a>
+                  <a href="{% url 'consulhistory' %}">Consultations History</a>
+                </li>
+                <li class="dd">
+                  <a href="#">Patient History &dtrif;</a>
+                  <ul class="dropdown">
+                    <li><a href="{% url 'resultshistory' %}">Laboratory Results</a></li>
+                    <li><a href="{% url 'pershistory' %}">Perscription</a></li>
+                  </ul>
                 </li>
                 <li>
                   <a href="{% url 'profile_doctor' %}">Profile</a>

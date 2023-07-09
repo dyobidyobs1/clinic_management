@@ -1,21 +1,22 @@
 {% extends 'reservation/base.html' %}
 {% block title %}
-	Consultation History
+	Perscription
 {% endblock %}
 {% block content %}
 <div class="container">
-    {% for i in reservation %}
+  <h1>Perscription</h1>
+    {% for i in results %}
     <main class="l-card-consultation">
         <section class="l-card__text">
             <p>
-               {{i.speciality}}
+                {{i.description}}
             </p>
         </section>
         <section class="l-card__user">
             <div class="l-card__userInfo">
-                <span>Patient {{i.patient}}</span>
-                <span>Upload Results <a href="{% url 'upload_labresults' i.id %}">Here...</a></span>
-                <span>Upload Perscription <a href="{% url 'upload_perscription' i.id %}">Here...</a></span>
+                <span>Dr. {{i.doctor}}</span>
+                <sub>{{i.date}}</sub>
+                <span>Download the Pdf <a href="{% url 'download' i.id %}">Here...</a></span>
             </div>
         </section>
     </main>
