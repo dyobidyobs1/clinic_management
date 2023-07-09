@@ -37,7 +37,6 @@ class ReservationSettings(models.Model):
     def __str__(self):
         return f'Limit: {self.reservation_limit} ------ Current: {self.reservation_current}'
 
-
 # ADMIN
 class Services(models.Model):
     service_name = models.CharField(max_length=255)
@@ -178,6 +177,15 @@ class ReservationFacilities(models.Model):
 
 
 class ReserveConsulation(models.Model):
+    TS = (
+        ("1", "8-9AM"),
+        ("2", "10-11AM"),
+        ("3", "12-1PM"),
+        ("4", "2-3PM"),
+        ("5", "4-5PM"),
+    )
+
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     patient = models.CharField(max_length=255)
     speciality = models.CharField(max_length=255)
@@ -187,6 +195,8 @@ class ReserveConsulation(models.Model):
     is_done = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
     schedule = models.DateTimeField()
+    timeslot = models.CharField(max_length=1, choices=TS, null=True)
+
     date_created = models.DateTimeField(auto_now_add=True)
 
     def date(self):
