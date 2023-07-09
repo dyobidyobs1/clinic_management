@@ -40,7 +40,7 @@ class ResultsForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserDetails
-        fields = "__all__"
+        fields = ["first_name", "middle_name", "last_name", "gender", "address", "email", "bdate", "placebirth"]
 
         widgets = {"bdate": DateInput()}
 

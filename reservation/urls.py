@@ -63,7 +63,10 @@ urlpatterns = [
     path('admin/', views.adminpage, name='admin'),
     path('adminreservation/', views.CheckReservation, name='adminreservation'),
     path('admincancelreservation/', views.CheckCancelReservation, name='admincancelreservation'),
-    path("adminupload_labresults/", views.UploadResultsAdmin, name="adminupload_labresults"),
+    path('admindonereservation/<str:pk>', views.DoneReservation, name='admindoneres'),
+    path("adminupload_labresults/<str:pk>", views.UploadResultsAdmin, name="adminupload_labresults"),
+    path("reservation_historyadmin/", views.ReservationHistoryAdmin, name="reservation_historyadmin"),
+    path("admin_schedule/", views.AdminSchedule, name="admin_schedule"),
 
     # Verify
     path('verify/<str:token>', views.Verify, name='verify'),

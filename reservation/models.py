@@ -3,6 +3,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 import locale
 import uuid
+
+from django.core.files.storage import FileSystemStorage
+from django.db import models
+
+fs = FileSystemStorage(location="/pdf_file")
+
+
 locale.setlocale(locale.LC_ALL, 'fil-PH')
 
 
@@ -71,14 +78,14 @@ class DoctorDetails(models.Model):
     )
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.CharField(max_length=50, null=True)
-    middle_name = models.CharField(max_length=50, null=True)
-    last_name = models.CharField(max_length=50, null=True)
-    gender = models.CharField(max_length=1, choices=GENDER, null=True)
-    address = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=50, null=True)
+    first_name = models.CharField(max_length=50, null=True, blank=True)
+    middle_name = models.CharField(max_length=50, null=True, blank=True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
+    gender = models.CharField(max_length=1, choices=GENDER, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True, blank=True)
     bdate = models.DateTimeField(null=True, blank=True)
-    placebirth = models.CharField(max_length=50, null=True)
+    placebirth = models.CharField(max_length=50, null=True, blank=True)
     speciality = models.ForeignKey(Speciality, on_delete=models.CASCADE, null=True, blank=True)
     rndid = models.CharField(
         max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True
@@ -95,7 +102,7 @@ class Results(models.Model):
     doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     patient = models.CharField(max_length=255)
     is_facility = models.BooleanField(default=False)
-    result_file = models.FileField()
+    result_file = models.FileField(storage=fs)
     description = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
 
@@ -123,7 +130,7 @@ class UserDetails(models.Model):
     placebirth = models.CharField(max_length=50, null=True)
     is_verified = models.BooleanField(default=False)
     token = models.CharField(
-        max_length=100, null=True, blank=True
+        max_length=100, null=True, blank=True, editable=False
     )
     rndid = models.CharField(
         max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True

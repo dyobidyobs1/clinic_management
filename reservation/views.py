@@ -187,9 +187,13 @@ def Login(request):
             password = request.POST.get("password")
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                userDet = UserDetails.objects.get(user=user)
-                if not userDet.is_verified:
-                    messages.info(request, "Your Account is Not Verified")
+                userDet = UserDetails.objects.filter(user=user)
+                if userDet:
+                    if not userDet[0].is_verified:
+                        messages.info(request, "Your Account is Not Verified")
+                    else:
+                        login(request, user)
+                        return redirect("index")
                 else:
                     login(request, user)
                     if user.is_staff:
@@ -319,6 +323,8 @@ def CancelReservation(request, pk):
 def ReservationHistory(request):
     reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
         Q(is_done=True)  | Q(is_cancelled=True))
+    print(reservation)
+    print(request.user)
     context = {"reservation": reservation}
     return render(request, "reservation/patient/reservation_history.html", context)
 
@@ -378,8 +384,14 @@ def MessagesPatient(request):
 
 @login_required(login_url="login")
 def PatientSchedule(request):
+
+    # consultation = ReservationFacilities.objects.filter(
+    #     Q(user=request.user) and Q(is_approve=True)).filter(is_done=False).filter(is_cancelled_by_admin=False).filter(is_bill_generated=True).order_by('schedule')
     consultation = ReservationFacilities.objects.filter(
-        Q(user=request.user) and Q(is_approve=True)).filter(is_done=False).filter(is_cancelled_by_admin=False).filter(is_bill_generated=True).order_by('schedule')
+        Q(user=request.user)).filter(is_approve=True).filter(is_done=False).\
+            filter(is_cancelled_by_admin=False).filter(is_bill_generated=True).order_by('schedule')
+    print(request.user)
+    print(consultation)
     context = {"reservation": consultation}
     return render(request, "reservation/patient/patient_schedule.html", context)
 
@@ -541,7 +553,7 @@ def DoneReservation(request, pk):
         message=f"Your Reservation is Done the Results will be \
             Uploaded if there is one",
         )
-    return redirect("admin")
+    return redirect("adminindex")
 
 @login_required(login_url="login")
 def CheckReservation(request):
@@ -552,13 +564,37 @@ def CheckReservation(request):
 
 @login_required(login_url="login")
 def CheckCancelReservation(request):
-    reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
-        Q(is_approve=True)).filter(is_cancelled_by_admin=False).order_by('schedule').order_by('date_created')
+    reservation = ReservationFacilities.objects.filter(Q(is_approve=True)).filter(is_cancelled_by_admin=False).order_by('schedule')
     context = {"reservation": reservation}
     return render(request, "reservation/reservation_admin_cancel.html", context)
 
 @login_required(login_url="login")
-def UploadResultsAdmin(request):
+def AdminSchedule(request):
+    consultation = ReservationFacilities.objects.filter(Q(is_done=False)).filter(is_approve=True)
+    print(consultation)
+    context = {"reservation": consultation}
+    return render(request, "reservation/admin_schedule.html", context)
+
+@login_required(login_url="login")
+def ReservationHistoryAdmin(request):
+    users = CustomUser.objects.filter(is_superuser=False).filter(is_doctor=False)
+    consultation = ReservationFacilities.objects.filter(Q(is_done=True)).order_by('-date_created')
+    context = {"reservation": consultation, "users": users}
+    if request.method == "POST":
+        patient_filter = request.POST.get("patient_filter")
+        if patient_filter:
+            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            print(patient_filter)
+            print(patient_filter2)
+            consultation = ReservationFacilities.objects.filter(Q(user=patient_filter2)).filter(is_done=True).order_by('-date_created')
+            context = {"reservation": consultation, "users": users}
+    print(consultation)
+    print(users)
+    return render(request, "reservation/reservation_admin.html", context)
+
+@login_required(login_url="login")
+def UploadResultsAdmin(request, pk):
+    reservation = ReservationFacilities.objects.get(id=pk)
     uploadresultform = UploadResultsForm()
     print(uploadresultform)
     if request.method == "POST":
@@ -566,11 +602,11 @@ def UploadResultsAdmin(request):
         print(uploadresultform)
         print(uploadresultform.is_valid())
         if uploadresultform.is_valid():
-            uploadresultform.is_facilty = True
+            uploadresultform.save(commit=False).is_facility = True
             uploadresultform.save(commit=False).doctor = request.user
             uploadresultform.save()
-        return redirect("adminreservation")
-    context = {"form" : uploadresultform}
+        return redirect("reservation_historyadmin")
+    context = {"reservation": reservation, "form" : uploadresultform}
     return render(request, "reservation/upload_results_admin.html", context)
 
 

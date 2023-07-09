@@ -1,45 +1,35 @@
 {% extends 'reservation/base.html' %}
 {% block title %}
-	Reservation
+	Reservation History
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h2 style="padding-top: 2rem;">List of Reservation</h2>
-    <div class="tb-res">
-        <div class="tbl-header">
-          <table cellpadding="0" cellspacing="0" border="0">
-            <thead>
-              <tr>
-                <th scope="col">Services</th>
-                <th class="hide" scope="col">Schedule</th>
-                <th class="hide" scope="col">Price</th>
-                <th scope="col">Status</th>
-                <!-- <th scope="col">Action</th> -->
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <div class="tbl-content">
-          <table cellpadding="0" cellspacing="0" border="0">
-            <tbody>
-              <tr>
-                {% for i in reservation %}
-                <th>{{i.facility.service_name}}</th>
-                <td>{{i.date}}</td>
-                <td>{{i.facility.price}}</td>
-                <td>Pending</td>
-                <!-- <td> -->
-                  <!-- <a
-                    class="button-link"
-                    href="{% url 'approveres' i.id %}"
-                    class="crud"
-                    >Approve</a
-                  > -->
-                <!-- </td> -->
-              </tr>
-            </tbody>
-            {% endfor %}
-          </table>
-        </div>
+  <h1>Reservation History</h1>
+  <form action="" method="post">
+    {% csrf_token %}
+    <select name="patient_filter">
+      <option value="" selected>---------</option>
+      {% for user in users %}
+      <option value="{{user.id}}">{{user}}</option>
+      {% endfor %}
+      <input type="submit" value="Search">
+    </select>
+  </form>
+    {% for i in reservation %}
+    <main class="l-card-consultation">
+        <section class="l-card__text">
+            <p>
+               {{i.facility.service_name}}
+            </p>
+        </section>
+        <section class="l-card__user">
+            <div class="l-card__userInfo">
+                <span>Patient: {{i.user}}</span>
+                <span>Upload Results <a href="{% url 'adminupload_labresults' i.id %}">Here...</a></span>
+            </div>
+        </section>
+    </main>
+    {% endfor %}
+    <div class="hidden">y</div>
 </div>
 {% endblock %}

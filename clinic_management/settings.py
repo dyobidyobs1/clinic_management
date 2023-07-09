@@ -157,8 +157,8 @@ PAYPAL_TEST = True
 
 PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
 
-CSRF_TRUSTED_ORIGINS = ['https://ada6-136-158-11-16.ngrok-free.app']
-CORS_ORIGIN_WHITELIST = ['https://ada6-136-158-11-16.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://2964-136-158-11-16.ngrok-free.app']
+CORS_ORIGIN_WHITELIST = ['https://2964-136-158-11-16.ngrok-free.app']
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
