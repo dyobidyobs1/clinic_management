@@ -4,6 +4,16 @@
 {% endblock %}
 {% block content %}
 <div class="container">
+    <form action="" method="post">
+        {% csrf_token %}
+        <select name="patient_filter">
+          <option value="" selected>---------</option>
+          {% for user in users %}
+          <option value="{{user.id}}">{{user}}</option>
+          {% endfor %}
+          <input type="submit" value="Search">
+        </select>
+    </form>
     {% for i in reservation %}
     <main class="l-card-consultation">
         <section class="l-card__text">

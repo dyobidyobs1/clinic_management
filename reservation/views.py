@@ -102,7 +102,7 @@ def paypal_cancel(request):
 
 @login_required(login_url="login")
 def BillingList(request):
-    bill = Billing.objects.filter(Q(request=request.user) and Q(is_generated = True)).order_by("-date_created")
+    bill = Billing.objects.filter(user=request.user).filter(is_generated=True).order_by("-date_created")
     context = {"results": bill}
     return render(request, "reservation/patient/billing.html", context)
 
@@ -321,8 +321,7 @@ def CancelReservation(request, pk):
 
 @login_required(login_url="login")
 def ReservationHistory(request):
-    reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
-        Q(is_done=True)  | Q(is_cancelled=True))
+    reservation = ReservationFacilities.objects.filter(user=request.user).filter(Q(is_done=True)  | Q(is_cancelled=True))
     print(reservation)
     print(request.user)
     context = {"reservation": reservation}
@@ -331,19 +330,10 @@ def ReservationHistory(request):
 
 @login_required(login_url="login")
 def ConsulHistory(request):
-    consultation = ReserveConsulation.objects.filter(Q(user=request.user) and 
-        Q(is_done=True) | Q(is_cancelled=True))
+    consultation = ReserveConsulation.objects.filter(user=request.user).filter(Q(is_done=True) | Q(is_cancelled=True))
     context = {"reservation": consultation}
     return render(request, "reservation/patient/consultation_history.html", context)
 
-
-@login_required(login_url="login")
-def LaboratoryResults(request):
-    fullname = f'{request.user.userdetails.first_name} {request.user.userdetails.middle_name} {request.user.userdetails.last_name}'
-    results = Results.objects.filter(patient=fullname).order_by("-date")
-    print(results)
-    context = {"results": results}
-    return render(request, "reservation/patient/perscription.html", context)
 
 @login_required(login_url="login")
 def LaboratoryResults(request):
@@ -352,6 +342,14 @@ def LaboratoryResults(request):
     print(results)
     context = {"results": results}
     return render(request, "reservation/patient/laboratory_results.html", context)
+
+@login_required(login_url="login")
+def PerscriptionList(request):
+    fullname = f'{request.user.userdetails.last_name}, {request.user.userdetails.first_name} {request.user.userdetails.middle_name}'
+    results = Perscription.objects.filter(patient=fullname).order_by("-date")
+    print(results)
+    context = {"results": results}
+    return render(request, "reservation/patient/perscription.html", context)
 
 @login_required(login_url="login")
 def ProfilePatient(request):
@@ -416,8 +414,7 @@ def HomeDoctor(request):
 @login_required(login_url="login")
 def CheckConsultation(request):
     doctordetails = DoctorDetails.objects.get(user=request.user)
-    consultation = ReserveConsulation.objects.filter(Q(doctors_id=doctordetails.rndid) | 
-        Q(is_approve=False)).order_by('-date_created')
+    consultation = ReserveConsulation.objects.filter(doctors_id=doctordetails.rndid).filter(is_approve=False).filter(is_cancelled=False).order_by('-date_created')
     print(consultation)
     context = {"reservation": consultation}
     return render(request, "reservation/doctors/check_consultation.html", context)
@@ -483,11 +480,17 @@ def UploadPerscrip(request, pk):
 
 @login_required(login_url="login")
 def ConsulsHistory(request):
+    users = CustomUser.objects.filter(is_superuser=False).filter(is_doctor=False)
     doctordetails = DoctorDetails.objects.get(user=request.user)
-    consultation = ReserveConsulation.objects.filter(Q(doctors_id=doctordetails.rndid) and
-        Q(is_done=True)).order_by('-date_created')
+    consultation = ReserveConsulation.objects.filter(doctors_id=doctordetails.rndid).filter(is_done=True).order_by('-date_created')
     print(consultation)
-    context = {"reservation": consultation}
+    context = {"reservation": consultation, "users": users}
+    if request.method == "POST":
+        patient_filter = request.POST.get("patient_filter")
+        if patient_filter:
+            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            consultation = ReserveConsulation.objects.filter(Q(user=patient_filter2)).filter(is_done=True).order_by('-date_created')
+            context = {"reservation": consultation, "users": users}
     return render(request, "reservation/doctors/consultation_history.html", context)
     
 @login_required(login_url="login")
@@ -540,7 +543,7 @@ def ResultsHistoryDocView(request):
         patient_filter = request.POST.get("patient_filter")
         if patient_filter:
             patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
-            fullname = f'{patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name} {patient_filter2.userdetails.last_name}'
+            fullname = f'{patient_filter2.userdetails.last_name}, {patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name}'
             results = Results.objects.filter(patient=fullname).order_by("-date")
             print(patient_filter)
             print(patient_filter2)
@@ -619,7 +622,7 @@ def CheckReservation(request):
     reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
         Q(is_approve=False)).filter(is_cancelled=False).order_by('schedule').order_by('date_created')
     context = {"reservation": reservation}
-    return render(request, "reservation/reservation_admin.html", context)
+    return render(request, "reservation/reservation_history.html", context)
 
 @login_required(login_url="login")
 def CheckCancelReservation(request):
@@ -680,6 +683,11 @@ def download(request, document_id):
     response['Content-Disposition'] = f'attachment; filename="{document.result_file.name}"'
     return response
 
+def downloadperscrption(request, document_id):
+    document = get_object_or_404(Perscription, pk=document_id)
+    response = HttpResponse(document.result_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{document.result_file.name}"'
+    return response
 
 # Verify Email
 def Verify(request, token):

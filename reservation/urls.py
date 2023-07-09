@@ -24,6 +24,7 @@ urlpatterns = [
     path("reservationhistory", views.ReservationHistory, name="reservation_history"),
     path("consultationhistory", views.ConsulHistory, name="consultation_history"),
     path("labresults", views.LaboratoryResults, name="labresults"),
+    path("perscription", views.PerscriptionList, name="perscription"),
     path("profile_patient", views.ProfilePatient, name="profile_patient"),
     path('editprofile/<str:pk>', views.EditProfilePatient, name='editprofilept'),
     path('schedule', views.PatientSchedule, name='schedulept'),
@@ -57,6 +58,7 @@ urlpatterns = [
 
     # DOWNLOAD
     path('download/<int:document_id>/', views.download, name='download'),
+    path('downloadpers/<int:document_id>/', views.downloadperscrption, name='downloadpers'),
     path('report/<int:pk>/', views.report, name='report'),
     # AUTH
     path("register/", views.Register, name="register"),
