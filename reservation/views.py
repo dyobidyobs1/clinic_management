@@ -395,9 +395,11 @@ def PatientSchedule(request):
     consultation = ReservationFacilities.objects.filter(
         Q(user=request.user)).filter(is_approve=True).filter(is_done=False).\
             filter(is_cancelled_by_admin=False).filter(is_bill_generated=True).order_by('schedule')
+    consultation2 = ReserveConsulation.objects.filter(
+        Q(user=request.user)).filter(is_approve=True).filter(is_done=False).order_by('schedule').order_by('timeslot')
     print(request.user)
     print(consultation)
-    context = {"reservation": consultation}
+    context = {"reservation": consultation, "reservation2": consultation2}
     return render(request, "reservation/patient/patient_schedule.html", context)
 
 # Doctors
@@ -529,7 +531,7 @@ def MessagesDoctor(request):
 def DoctorSchedule(request):
     doctordetails = DoctorDetails.objects.get(user=request.user)
     consultation = ReserveConsulation.objects.filter(
-        Q(doctors_id=doctordetails.rndid) and Q(is_done=False)).filter(is_approve=True)
+        Q(doctors_id=doctordetails.rndid) and Q(is_done=False)).filter(is_approve=True).order_by('schedule').order_by('timeslot')
     print(consultation)
     context = {"reservation": consultation}
     return render(request, "reservation/doctors/doctors_schedule.html", context)

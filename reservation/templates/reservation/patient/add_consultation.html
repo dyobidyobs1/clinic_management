@@ -12,7 +12,8 @@
         <input name="doctor" type="text" placeholder="Dr. {{details.last_name}}, {{details.first_name}} {{details.middle_name}}" value="Dr. {{details.last_name}}, {{details.first_name}} {{details.middle_name}}" disabled>
         <label>Speciality: </label>
         <input name="speciality" type="text" placeholder="{{details.speciality}}" value="{{details.speciality}}" disabled>
-
+        <label>Timeslot: </label>
+        {{form.timeslot}}
 
         <input name="doctors_id" type="hidden" placeholder="{{details.rndid}}" value="{{details.rndid}}" hidden>
         <input name="patient" type="hidden" placeholder="{{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" value=" {{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" hidden>

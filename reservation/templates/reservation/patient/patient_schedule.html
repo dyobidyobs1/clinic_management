@@ -15,6 +15,15 @@
         </div>
         <div class="calendar_events">
         <p class="ce_title">Upcoming Approve Consultations/Services</p>
+        {% for i in reservation2 %}
+        <div class="event_item">
+            <div class="ei_Dot"></div>
+            <div class="ei_Title">{{i.speciality}}</div>
+            <div class="ei_Title">with {{i.doctor}}</div>
+            <div class="ei_Copy"><b>{{i.date}}</b></div>
+            <div class="ei_Copy"><b>{{ i.get_timeslot_display }}</b></div>
+        </div>
+        {% endfor %}
         {% for i in reservation %}
         <div class="event_item">
             <div class="ei_Dot"></div>

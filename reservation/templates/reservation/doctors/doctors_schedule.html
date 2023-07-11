@@ -18,12 +18,14 @@
         {% for i in reservation %}
         <div class="event_item">
             <div class="ei_Dot"></div>
-            <div class="ei_Title">{{i.patient}} <a
-                class="button-link"
-                href="{% url 'donecon' i.id %}"
-                class="crud">Done</a>
-            </div>
-            <div class="ei_Copy">{{i.date}}</div>
+            <div class="ei_Title">{{i.patient}}</div>
+            <div class="ei_Copy" style="margin: 5px; margin-left: 2rem;"><a
+              class="button-link"
+              href="{% url 'donecon' i.id %}"
+              class="crud">Done</a></div>
+            
+            <div class="ei_Copy"> <b>{{i.date}}</b> </div>
+            <div class="ei_Copy"> <b>{{i.get_timeslot_display}}</b> </div>
         </div>
         {% endfor %}
     </div>
