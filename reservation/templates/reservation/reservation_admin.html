@@ -7,13 +7,8 @@
   <h1>Reservation History</h1>
   <form action="" method="post">
     {% csrf_token %}
-    <select name="patient_filter">
-      <option value="" selected>---------</option>
-      {% for user in users %}
-      <option value="{{user.id}}">{{user}}</option>
-      {% endfor %}
-      <input type="submit" value="Search">
-    </select>
+    <input type="text" placeholder="Search..." name="patient_filter">
+    <input type="submit" value="Search">
   </form>
     {% for i in reservation %}
     <main class="l-card-consultation">

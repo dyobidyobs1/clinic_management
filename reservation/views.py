@@ -234,6 +234,7 @@ def HomePatient(request):
 @login_required(login_url="login")
 def AddReservation(request, pk):
     facility = Services.objects.get(id=pk)
+    patient = UserDetails.objects.get(user=request.user)
     print("facility", facility)
     reservationform = ReservationFormFacilities()
     print("reservationform", reservationform)
@@ -244,7 +245,7 @@ def AddReservation(request, pk):
             reservationform.save(commit=False).facility = facility
             reservationform.save()
         return redirect("index")
-    context = {"form": reservationform, "details": facility}
+    context = {"form": reservationform, "details": facility, "patient": patient}
     return render(request, "reservation/patient/add_reservation.html", context)
 
 @login_required(login_url="login")
@@ -490,8 +491,8 @@ def ConsulsHistory(request):
     if request.method == "POST":
         patient_filter = request.POST.get("patient_filter")
         if patient_filter:
-            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
-            consultation = ReserveConsulation.objects.filter(Q(user=patient_filter2)).filter(is_done=True).order_by('-date_created')
+            # patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            consultation = ReserveConsulation.objects.filter(Q(patient__icontains=patient_filter)).filter(is_done=True).order_by('-date_created')
             context = {"reservation": consultation, "users": users}
     return render(request, "reservation/doctors/consultation_history.html", context)
     
@@ -544,11 +545,11 @@ def ResultsHistoryDocView(request):
     if request.method == "POST":
         patient_filter = request.POST.get("patient_filter")
         if patient_filter:
-            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
-            fullname = f'{patient_filter2.userdetails.last_name}, {patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name}'
-            results = Results.objects.filter(patient=fullname).order_by("-date")
+            # patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            # fullname = f'{patient_filter2.userdetails.last_name}, {patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name}'
+            results = Results.objects.filter(Q(patient__icontains=patient_filter)).order_by("-date")
             print(patient_filter)
-            print(patient_filter2)
+            # print(patient_filter2)
             context = {"results": results, "users": users}
     print(results)
     print(request.user)
@@ -563,11 +564,13 @@ def PerscriptionHistoryDocView(request):
     if request.method == "POST":
         patient_filter = request.POST.get("patient_filter")
         if patient_filter:
-            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
-            fullname = f'{patient_filter2.userdetails.last_name}, {patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name}'
-            results = Perscription.objects.filter(patient=fullname).order_by("-date")
+            # patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            # fullname = f'{patient_filter2.userdetails.last_name}, {patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name}'
+            # results = Perscription.objects.filter(patient=fullname).order_by("-date")
+            results = Perscription.objects.filter(Q(patient__icontains=patient_filter)).order_by("-date")
             print(patient_filter)
-            print(patient_filter2)
+            print(results)
+            # print(patient_filter2)
             context = {"results": results, "users": users}
     return render(request, "reservation/doctors/patients_history_consultation.html", context)
 
@@ -647,10 +650,10 @@ def ReservationHistoryAdmin(request):
     if request.method == "POST":
         patient_filter = request.POST.get("patient_filter")
         if patient_filter:
-            patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            # patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
             print(patient_filter)
-            print(patient_filter2)
-            consultation = ReservationFacilities.objects.filter(Q(user=patient_filter2)).filter(is_done=True).order_by('-date_created')
+            # print(patient_filter2)
+            consultation = ReservationFacilities.objects.filter(Q(patient__icontains=patient_filter)).filter(is_done=True).order_by('-date_created')
             context = {"reservation": consultation, "users": users}
     print(consultation)
     print(users)

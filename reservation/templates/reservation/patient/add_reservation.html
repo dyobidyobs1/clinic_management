@@ -10,6 +10,7 @@
         {% csrf_token %}
         <label>Services: </label>
         <input name="facility" type="text" placeholder="{{details}}" value="{{details}}" disabled>
+        <input name="patient" type="hidden" placeholder="{{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" value=" {{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" hidden>
         <label>Schedule: </label>
         {{form.schedule}}
         <div class="btn-flex">

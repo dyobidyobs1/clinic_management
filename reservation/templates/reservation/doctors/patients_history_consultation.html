@@ -7,13 +7,8 @@
   <h1>Perscription History</h1>
   <form action="" method="post">
     {% csrf_token %}
-    <select name="patient_filter">
-      <option value="" selected>---------</option>
-      {% for user in users %}
-      <option value="{{user.id}}">{{user}}</option>
-      {% endfor %}
-      <input type="submit" value="Search">
-    </select>
+    <input type="text" placeholder="Search..." name="patient_filter">
+    <input type="submit" value="Search">
   </form>
     {% for i in results %}
     <main class="l-card-consultation">
@@ -25,6 +20,7 @@
         <section class="l-card__user">
             <div class="l-card__userInfo">
                 <span>Dr. {{i.doctor}}</span>
+                <span>Patient: {{i.patient}}</span>
                 <sub>{{i.date}}</sub>
                 <span>Download the Pdf <a href="{% url 'downloadpers' i.id %}">Here...</a></span>
             </div>

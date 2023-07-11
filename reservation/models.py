@@ -158,6 +158,7 @@ class UserDetails(models.Model):
 
 class ReservationFacilities(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    patient = models.CharField(max_length=255)
     facility = models.ForeignKey(Services, on_delete=models.CASCADE, null=True, blank=True)
     schedule = models.DateTimeField()
     reference_number = models.CharField(max_length=255, editable=False, null=True, blank=True)
