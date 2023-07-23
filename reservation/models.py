@@ -121,7 +121,7 @@ class Perscription(models.Model):
     def __str__(self):
         locale.setlocale(locale.LC_ALL, 'en-US')
         date = self.date.strftime("%B %d, %Y")
-        return f"A Perscription for {self.patient} on {date}"
+        return f"A Prescription for {self.patient} on {date}"
 
 
 # PATIENT/USER
@@ -157,6 +157,12 @@ class UserDetails(models.Model):
 
 
 class ReservationFacilities(models.Model):
+    TS = (
+        ("1", "6:00AM - 12:00NN"),
+        ("2", "1:00PM - 6:00PM"),
+    )
+
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     patient = models.CharField(max_length=255)
     facility = models.ForeignKey(Services, on_delete=models.CASCADE, null=True, blank=True)
@@ -168,6 +174,17 @@ class ReservationFacilities(models.Model):
     is_cancelled = models.BooleanField(default=False)
     is_cancelled_by_admin = models.BooleanField(default=False)
     is_bill_generated = models.BooleanField(default=False)
+    reservation_limit = models.IntegerField()
+    reservation_current = models.IntegerField()
+    timeslot = models.CharField(max_length=1, choices=TS, null=True)
+
+    def validate(self):
+        if self.reservation_limit < self.reservation_current:
+            return False
+        elif self.reservation_limit == self.reservation_current:
+            return True
+        else:
+            return True
 
     def date(self):
         locale.setlocale(locale.LC_ALL, 'en-US')

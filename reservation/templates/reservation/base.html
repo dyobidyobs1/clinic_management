@@ -15,7 +15,7 @@
 <body>
     <nav class="navbar">
         <a class="brand"><img 
-          src="{% static 'image/logo.jpg' %}" alt="Logo" height="70px" width="80px"></a>
+          src="{% static 'image/transLogo.png' %}" alt="Logo" height="80px" width="200px" style="margin-top:10px; margin-left: 0;"></a>
           <ul>
             {% if user.is_authenticated %}
               {% if user.is_staff %}
@@ -53,14 +53,14 @@
                   <a href="#">Patient History &dtrif;</a>
                   <ul class="dropdown">
                     <li><a href="{% url 'resultshistory' %}">Laboratory Results</a></li>
-                    <li><a href="{% url 'pershistory' %}">Perscription</a></li>
+                    <li><a href="{% url 'pershistory' %}">Prescription</a></li>
                   </ul>
                 </li>
                 <li>
                   <a href="{% url 'profile_doctor' %}">Profile</a>
                 </li>
                 <li>
-                  <a href="{% url 'logout' %}">Logout</a>
+                  <a href="{% url 'logout' %}" style="margin-left: 5rem;">Logout</a>
                 </li>
               {% else %}
                 <li>
@@ -85,10 +85,10 @@
                   </ul>
                 </li>
                 <li class="dd">
-                  <a href="#">Perscription/Results &dtrif;</a>
+                  <a href="#">Prescription/Results &dtrif;</a>
                   <ul class="dropdown">
                     <li><a href="{% url 'labresults' %}">Laboratory Results</a></li>
-                    <li><a href="{% url 'perscription' %}">Perscription</a></li>
+                    <li><a href="{% url 'perscription' %}">Prescription</a></li>
                   </ul>
                 </li>
                 <li class="dd">
@@ -108,7 +108,7 @@
                   <!-- <a href="{% url 'messagesdoctor' %}">Messages</a> -->
                 <!-- </li> -->
                 <li>
-                    <a href="{% url 'logout' %}">Logout</a>
+                    <a href="{% url 'logout' %}" style="margin-left: 5rem;">Logout</a>
                 </li>
               {% endif %}
             {% else %}

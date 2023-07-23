@@ -12,7 +12,7 @@ a {
   }
   
   .navbar {
-    background-color: #333333;
+    background-color: #878383;
     display: flex;
     align-items:center;
   }
@@ -33,19 +33,20 @@ a {
     list-style-type: none;
     display: flex;
     align-items:center;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
   
   .navbar ul li a {
-    color: #e7e7e7;
-    padding: 24px;
+    color: black;
+    padding: 15px;
     display: block;
   }
   
   .navbar ul a:hover,
   .navbar ul a:focus,
   .navbar ul .active {
-    background-color: #272727;
+    background-color: #cbc6c6;
+    border-radius: 5px;
   }
 
 
@@ -474,7 +475,7 @@ td{
 	max-width: 480px; */
 	height: auto;
 	background: #f5f5f5;
-	color: #272727;
+	color: #535151;
 	padding: 2rem;
 	box-shadow: 0px 7px 24px rgba(56, 49, 49, 0.4);
   margin-bottom: 2rem;
