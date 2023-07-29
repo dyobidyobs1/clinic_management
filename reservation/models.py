@@ -43,6 +43,16 @@ class Services(models.Model):
     service_description = models.TextField()
     service_price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='uploads/services', blank=True, null=True)
+    reservation_limit = models.IntegerField()
+    reservation_current = models.IntegerField()
+
+    def validate(self):
+        if self.reservation_limit < self.reservation_current:
+            return False
+        elif self.reservation_limit == self.reservation_current:
+            return True
+        else:
+            return True
 
     def price(self):
         locale.setlocale(locale.LC_ALL, 'fil-PH')
@@ -55,6 +65,16 @@ class Facilites(models.Model):
     facility_name = models.CharField(max_length=255)
     facility_description = models.TextField()
     facility_price = models.DecimalField(max_digits=10, decimal_places=2)
+    reservation_limit = models.IntegerField()
+    reservation_current = models.IntegerField()
+
+    def validate(self):
+        if self.reservation_limit < self.reservation_current:
+            return False
+        elif self.reservation_limit == self.reservation_current:
+            return True
+        else:
+            return True
 
     def price(self):
         locale.setlocale(locale.LC_ALL, 'fil-PH')
@@ -110,7 +130,7 @@ class Results(models.Model):
         date = self.date.strftime("%B %d, %Y")
         return f"A Result for {self.patient} on {date}"
 
-class Perscription(models.Model):
+class Prescription(models.Model):
     doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     patient = models.CharField(max_length=255)
     is_facility = models.BooleanField(default=False)
@@ -174,17 +194,7 @@ class ReservationFacilities(models.Model):
     is_cancelled = models.BooleanField(default=False)
     is_cancelled_by_admin = models.BooleanField(default=False)
     is_bill_generated = models.BooleanField(default=False)
-    reservation_limit = models.IntegerField()
-    reservation_current = models.IntegerField()
-    timeslot = models.CharField(max_length=1, choices=TS, null=True)
-
-    def validate(self):
-        if self.reservation_limit < self.reservation_current:
-            return False
-        elif self.reservation_limit == self.reservation_current:
-            return True
-        else:
-            return True
+    timeslot = models.CharField(max_length=1, choices=TS, default=1)
 
     def date(self):
         locale.setlocale(locale.LC_ALL, 'en-US')

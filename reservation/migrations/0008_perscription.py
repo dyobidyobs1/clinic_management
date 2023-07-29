@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Perscription",
+            name="Prescription",
             fields=[
                 (
                     "id",

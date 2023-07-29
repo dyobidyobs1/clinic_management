@@ -5,7 +5,11 @@
 {% block content %}
 <div class="container">
     <h1>Checkout</h1>
+    {% if total_amount != "₱0.00" %}
     <h4 style="margin-bottom: 1rem;">Total:  {{total_amount}}</h4>
+    {% else %}
+        <p class="message">Reservation Exceed to Limit</p>
+    {% endif %}
     <p>{{form.render}}</p>
     {% for i in reservation %}
     <main style="margin-top: 1rem;" class="l-card-messages">

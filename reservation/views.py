@@ -30,63 +30,64 @@ def Checkout(request):
     host = request.get_host()
     invoice_str = create_rand_id()
     locale.setlocale(locale.LC_ALL, 'fil-PH')
-    reservation = ReservationFacilities.objects.filter(Q(user=request.user) and 
+    current = 0
+    total_amount = 0
+    form = []
+    reservations = ReservationFacilities.objects.filter(Q(user=request.user) and 
         Q(is_approve=False)).filter(is_done=False).filter(is_cancelled=False).filter(is_bill_generated=False)
     
+    billing = Billing.objects.filter(reference_number=invoice_str)
+    
+    for i in reservations:
+        current = int(i.facility.reservation_current + 1)
+        i.facility.reservation_current = current
+        if current <= int(i.facility.reservation_limit):
+            total_amount += i.facility.service_price
+            if len(billing) == 0:
+                Billing.objects.create(
+                    user=request.user,
+                    reference_number=invoice_str,
+                    total_payment=total_amount
+                )
+                for res in reservations:
+                    reser = ReservationFacilities.objects.get(id=res.id)
+                    reser.reference_number = invoice_str
+                    reser.save()
 
-    reservation_count = len(reservation)
-    limit = ReservationSettings.objects.get(id=1)
-    current = int(limit.reservation_current + reservation_count)
-    print(current)
-    limit.reservation_current = current
+                paypal_dict = {
+                    'business': settings.PAYPAL_RECEIVER_EMAIL,
+                    'amount': '%.2f' % total_amount,
+                    'item_name': 'Reservation Payment',
+                    'invoice': invoice_str,
+                    'currency_code': 'PHP',
+                    'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
+                    'return_url': 'http://{}{}'.format(host, reverse('paypal-return')),
+                    'cancel_return': 'http://{}{}'.format(host, reverse('paypal-cancel')),
+                }
+                
+                form = PayPalPaymentsForm(initial=paypal_dict)
 
-    total_amount = 0
-    for res in reservation:
-        total_amount += res.facility.service_price
+        else:
+            print("reservation limit meet")
+            messages.info(request, "Reservation Exceed to Limit")
+
+            Messages.objects.create(
+            user=request.user,
+            to=request.user,
+            message=f"The Reservation Limit for today is Fulfilled")
+
+
+            # Email
+            subject = f'The Reservation Limit is Fulfilled'
+            message = f"Your Payment is not Successfull because the Reservation Limit is Fulfilled"
+
+            recipients = [request.user.email, ]
+        
+            send_email(subject, message, recipients)
 
     total_amountstr = locale.currency(total_amount, grouping=True)
 
-    billing = Billing.objects.filter(reference_number=invoice_str)
-    print(len(billing))
-    if current <= limit.reservation_limit:
-        limit.save()
-        if len(billing) == 0:
-            Billing.objects.create(
-                user=request.user,
-                reference_number=invoice_str,
-                total_payment=total_amount
-            )
-            for res in reservation:
-                reservations = ReservationFacilities.objects.get(id=res.id)
-                reservations.reference_number = invoice_str
-                reservations.save()
-    else:
-        Messages.objects.create(
-        user=request.user,
-        to=request.user,
-        message=f"The Reservation Limit for today is Fulfilled")
-
-        # Email
-        subject = f'The Reservation Limit is Fulfilled'
-        message = f"Your Payment is not Successfull because the Reservation Limit is Fulfilled"
-
-        recipients = [request.user.email, ]
-    
-        send_email(subject, message, recipients)
-
-    paypal_dict = {
-        'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': '%.2f' % total_amount,
-        'item_name': 'Reservation Payment',
-        'invoice': invoice_str,
-        'currency_code': 'PHP',
-        'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
-        'return_url': 'http://{}{}'.format(host, reverse('paypal-return')),
-        'cancel_return': 'http://{}{}'.format(host, reverse('paypal-cancel')),
-    }
-    
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {"reservation": reservation, "total_amount": total_amountstr, "form" : form}
+    context = {"reservation": reservations, "total_amount": total_amountstr, "form" : form}
     return render(request, "reservation/patient/check_out_patient.html", context)
 
 @login_required(login_url="login")
@@ -128,6 +129,7 @@ def report(request, pk):
         text = str(line.facility.price())
         pdf.cell(100, 8, f"Services: {line.facility.service_name.ljust(20)}", 0, 1)
         pdf.cell(100, 10, f"Price: {text.rjust(20)} Schedule: {line.date().ljust(10)}", 0, 1)
+        pdf.cell(100, 12, f"Timeslot: {line.get_timeslot_display()}", 0, 1)
         pdf.line(1, 38, 119, 38)
 
     pdf.output(f'{bill_generated.reference_number}.pdf', 'F')
@@ -345,9 +347,9 @@ def LaboratoryResults(request):
     return render(request, "reservation/patient/laboratory_results.html", context)
 
 @login_required(login_url="login")
-def PerscriptionList(request):
+def PrescriptionList(request):
     fullname = f'{request.user.userdetails.last_name}, {request.user.userdetails.first_name} {request.user.userdetails.middle_name}'
-    results = Perscription.objects.filter(patient=fullname).order_by("-date")
+    results = Prescription.objects.filter(patient=fullname).order_by("-date")
     print(results)
     context = {"results": results}
     return render(request, "reservation/patient/perscription.html", context)
@@ -467,10 +469,10 @@ def UploadResults(request, pk):
 @login_required(login_url="login")
 def UploadPerscrip(request, pk):
     consultation = ReserveConsulation.objects.get(id=pk)
-    uploadresultform = PerscriptionForm()
+    uploadresultform = PrescriptionForm()
     print(uploadresultform)
     if request.method == "POST":
-        uploadresultform = PerscriptionForm(request.POST, request.FILES)
+        uploadresultform = PrescriptionForm(request.POST, request.FILES)
         print(uploadresultform)
         print(uploadresultform.is_valid())
         if uploadresultform.is_valid():
@@ -557,7 +559,7 @@ def ResultsHistoryDocView(request):
 
 
 @login_required(login_url="login")
-def PerscriptionHistoryDocView(request):
+def PrescriptionHistoryDocView(request):
     users = CustomUser.objects.filter(is_superuser=False).filter(is_doctor=False)
     results = []
     context = {"results": results, "users": users}
@@ -566,8 +568,8 @@ def PerscriptionHistoryDocView(request):
         if patient_filter:
             # patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
             # fullname = f'{patient_filter2.userdetails.last_name}, {patient_filter2.userdetails.first_name} {patient_filter2.userdetails.middle_name}'
-            # results = Perscription.objects.filter(patient=fullname).order_by("-date")
-            results = Perscription.objects.filter(Q(patient__icontains=patient_filter)).order_by("-date")
+            # results = Prescription.objects.filter(patient=fullname).order_by("-date")
+            results = Prescription.objects.filter(Q(patient__icontains=patient_filter)).order_by("-date")
             print(patient_filter)
             print(results)
             # print(patient_filter2)
@@ -689,7 +691,7 @@ def download(request, document_id):
     return response
 
 def downloadperscrption(request, document_id):
-    document = get_object_or_404(Perscription, pk=document_id)
+    document = get_object_or_404(Prescription, pk=document_id)
     response = HttpResponse(document.result_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{document.result_file.name}"'
     return response

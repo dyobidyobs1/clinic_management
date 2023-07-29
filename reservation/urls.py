@@ -26,7 +26,7 @@ urlpatterns = [
     path("reservationhistory", views.ReservationHistory, name="reservation_history"),
     path("consultationhistory", views.ConsulHistory, name="consultation_history"),
     path("labresults", views.LaboratoryResults, name="labresults"),
-    path("perscription", views.PerscriptionList, name="perscription"),
+    path("perscription", views.PrescriptionList, name="perscription"),
     path("profile_patient", views.ProfilePatient, name="profile_patient"),
     path('editprofile/<str:pk>', views.EditProfilePatient, name='editprofilept'),
     path('schedule', views.PatientSchedule, name='schedulept'),
@@ -45,7 +45,7 @@ urlpatterns = [
     path('approvecon/<str:pk>', views.ApproveConsultation, name='approvecon'),
     path('donecon/<str:pk>', views.DoneConsultation, name='donecon'),
     path("resultshistory/", views.ResultsHistoryDocView, name="resultshistory"),
-    path("pershistory/", views.PerscriptionHistoryDocView, name="pershistory"),
+    path("pershistory/", views.PrescriptionHistoryDocView, name="pershistory"),
 
 
     path('approvereservation/<str:pk>', views.ApproveReservation, name='approveres'),
