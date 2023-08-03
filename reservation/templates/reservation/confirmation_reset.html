@@ -1,0 +1,19 @@
+{% extends 'reservation/base.html' %}
+{% block title %}
+	Confirm Reset
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Reset Services Limit</h1>
+    <div class="section-delete">
+        <form action="" method="POST">
+        {% csrf_token %}
+        <label>Are you sure you want to reset all the sevices limit?</label>
+        <div class="btn-flex">
+            <button type="submit" class="button-register">Yes</button>
+            <a class="button-register" href="{% url 'adminindex' %}">No</a>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

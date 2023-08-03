@@ -322,7 +322,7 @@ form select:focus {
 
 /* Table */
 .container-table {
-  max-width: 600px;
+  max-width: 90rem;
   margin: auto;
   padding: 50px 0;
   height: 200px;
@@ -330,22 +330,26 @@ form select:focus {
 }
 
 
-table{
+table {
   width:100%;
+  margin: auto;
   table-layout: fixed;
 }
 .tbl-header{
+  width: 100%;
   background-color: rgba(255,255,255,0.3);
+  text-align: center;
  }
 .tbl-content{
   height:300px;
   overflow-x:auto;
   margin-top: 0px;
   border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
 }
 th{
   padding: 20px 15px;
-  text-align: left;
+  /* text-align: left; */
   font-weight: 500;
   font-size: 12px;
   color: rgb(0, 0, 0);
@@ -353,7 +357,7 @@ th{
 }
 td{
   padding: 15px;
-  text-align: left;
+  /* text-align: left; */
   vertical-align:middle;
   font-weight: 300;
   font-size: 12px;
@@ -840,9 +844,42 @@ td{
   display: flex;
   margin: auto;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-end;
 }
 
 .des img {
   margin-right: 1rem;
+}
+
+body .login-background {
+  background-image: url("https://res.cloudinary.com/dmagk9gck/image/upload/v1690999691/media/uploads/services/LOGIN_qwfmfa.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 50rem;
+
+}
+
+body .home-background {
+  background-image: url("https://res.cloudinary.com/dmagk9gck/image/upload/v1690999691/media/uploads/services/Home_tncogq.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 55rem;
+}
+
+body .contact-background {
+  background-image: url("https://res.cloudinary.com/dmagk9gck/image/upload/v1690999693/media/uploads/services/CONTACT_US_rqtplz.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 115rem;
+}
+
+body .about-background {
+  background-image: url("https://res.cloudinary.com/dmagk9gck/image/upload/v1690999690/media/uploads/services/ABOUT_US_rmvrnc.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 109rem;
 }

@@ -50,7 +50,7 @@ class Services(models.Model):
         if self.reservation_limit < self.reservation_current:
             return False
         elif self.reservation_limit == self.reservation_current:
-            return True
+            return False
         else:
             return True
 

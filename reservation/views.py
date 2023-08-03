@@ -200,7 +200,7 @@ def Login(request):
                     login(request, user)
                     if user.is_staff:
                         if user.is_superuser:
-                            return redirect("admin")
+                            return redirect("adminindex")
                     elif user.is_doctor:
                         return redirect("consultation_doctors")
                     else:
@@ -350,7 +350,6 @@ def LaboratoryResults(request):
 def PrescriptionList(request):
     fullname = f'{request.user.userdetails.last_name}, {request.user.userdetails.first_name} {request.user.userdetails.middle_name}'
     results = Prescription.objects.filter(patient=fullname).order_by("-date")
-    print(results)
     context = {"results": results}
     return render(request, "reservation/patient/perscription.html", context)
 
@@ -662,6 +661,67 @@ def ReservationHistoryAdmin(request):
     return render(request, "reservation/reservation_admin.html", context)
 
 @login_required(login_url="login")
+def AddReservationForm(request, pk):
+    users = CustomUser.objects.get(id=pk)
+    print(users)
+    patient = UserDetails.objects.get(id=users.userdetails.id)
+    filter_services = []
+    facility = Services.objects.all()
+    for i in facility:
+        if i.validate():
+            filter_services.append(i)
+            
+    print("facility", facility)
+    reservationform = ReservationFormFacilities()
+    print("reservationform", reservationform)
+    if request.method == "POST":
+        reservationform = ReservationFormFacilities(request.POST)
+        facilityget = request.POST.get("facility")
+        facility = Services.objects.get(id=facilityget)
+        facility.reservation_current = int(facility.reservation_current + 1)
+        if reservationform.is_valid():
+            reservationform.save(commit=False).user = users
+            reservationform.save(commit=False).facility = facility
+            reservationCurr = reservationform.save()
+            reservation = ReservationFacilities.objects.get(id=reservationCurr.id)
+            reservation.is_approve = True
+            reservation.save()
+            facility.save()
+        return redirect("index")
+    context = {"form": reservationform, "filter_services": filter_services, "patient": patient}
+    return render(request, "reservation/reservation_manual.html", context)
+
+@login_required(login_url="login")
+def AddReservationAdmin(request):
+    users = CustomUser.objects.filter(is_superuser=False).filter(is_doctor=False)
+    context = {"users": users}
+    if request.method == "POST":
+        patient_filter = request.POST.get("patient_filter")
+        if patient_filter:
+            # patient_filter2 = CustomUser.objects.get(id=int(patient_filter))
+            print(patient_filter)
+            # print(patient_filter2)
+            users = CustomUser.objects.filter(
+                Q(userdetails__first_name__icontains=patient_filter)  |
+                Q(userdetails__middle_name__icontains=patient_filter) |
+                Q(userdetails__last_name__icontains=patient_filter)).filter(is_superuser=False).filter(is_doctor=False)
+            context = {"users": users}
+    print(users)
+    return render(request, "reservation/reservation_add_admin.html", context)
+
+@login_required(login_url="login")
+def ResetServices(request):
+    services = Services.objects.all()
+    if request.method == "POST":
+        for i in services:
+            i.reservation_current = 0
+            i.save()
+        return redirect("adminindex")
+    return render(request, "reservation/confirmation_reset.html")
+
+
+
+@login_required(login_url="login")
 def UploadResultsAdmin(request, pk):
     reservation = ReservationFacilities.objects.get(id=pk)
     uploadresultform = UploadResultsForm()
@@ -679,8 +739,8 @@ def UploadResultsAdmin(request, pk):
     return render(request, "reservation/upload_results_admin.html", context)
 
 
-# Download
 
+# Download
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 

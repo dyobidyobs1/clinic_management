@@ -3,12 +3,14 @@
 	Dashboard || Patients Name
 {% endblock %}
 {% block content %}
-<div class="container">
-    <h1>Welcome Patient</h1>
-    {% if messages %}
-        {% for message in messages %}
-         <p>{{message}}</p>
-        {% endfor %}
-    {% endif %}
+<div class="home-background">
+    <div class="container">
+            <h1>Welcome Patient</h1>
+            {% if messages %}
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %}
+            {% endif %}
+    </div>
 </div>
 {% endblock %}

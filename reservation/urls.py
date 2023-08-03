@@ -74,6 +74,9 @@ urlpatterns = [
     path("adminupload_labresults/<str:pk>", views.UploadResultsAdmin, name="adminupload_labresults"),
     path("reservation_historyadmin/", views.ReservationHistoryAdmin, name="reservation_historyadmin"),
     path("admin_schedule/", views.AdminSchedule, name="admin_schedule"),
+    path("manual_reservation/", views.AddReservationAdmin, name="manual_reservation"),
+    path("manual_reservationform/<str:pk>", views.AddReservationForm, name="manual_reservationform"),
+    path("confirm_reset/", views.ResetServices, name="confirm_reset"),
 
     # Verify
     path('verify/<str:token>', views.Verify, name='verify'),

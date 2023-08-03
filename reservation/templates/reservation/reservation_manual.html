@@ -1,0 +1,33 @@
+{% extends 'reservation/base.html' %}
+{% block title %}
+	Manual Reservation
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Manual Reservation Form</h1>
+    <div class="section-delete">
+        <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Services: </label>
+        <select name="facility">
+            <option value="" selected>---------</option>
+            {% for service in filter_services %}
+            <option value="{{service.id}}">{{service}}</option>
+            {% endfor %}
+        </select>
+        <!-- <input name="facility" type="text" placeholder="{{details}}" value="{{details}}" disabled> -->
+        <label>Patient: </label>
+        <input name="" type="text" placeholder="{{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" value=" {{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" disabled>
+        <input name="patient" type="hidden" placeholder="{{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" value=" {{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" hidden>
+        <label>Schedule: </label>
+        {{form.schedule}}
+        <label>Timeslot: </label>
+        {{form.timeslot}}
+        <div class="btn-flex">
+            <button type="submit" class="button-register">Schedule</button>
+            <button type="reset" class="button-register">Reset</button>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
