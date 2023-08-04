@@ -865,7 +865,7 @@ body .home-background {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 55rem;
+  height: 59rem;
 }
 
 body .contact-background {
@@ -873,7 +873,7 @@ body .contact-background {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  height: 115rem;
+  height: 129.5rem;
 }
 
 body .about-background {
@@ -881,5 +881,14 @@ body .about-background {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  height: 109rem;
+  height: 122.8rem;
+}
+
+
+body .homepage-background {
+  background-image: url("https://res.cloudinary.com/dmagk9gck/image/upload/v1691147259/Group_51_j9y49s.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 210rem;
 }

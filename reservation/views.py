@@ -134,7 +134,11 @@ def report(request, pk):
 
     pdf.output(f'{bill_generated.reference_number}.pdf', 'F')
     return FileResponse(open(f'{bill_generated.reference_number}.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
-    
+
+# Home Page
+def HomePage(request):
+    return render(request, "reservation/homepage.html")
+
 # AUTH
 def Register(request):
     if request.user.is_authenticated:

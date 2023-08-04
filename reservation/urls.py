@@ -7,7 +7,8 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.HomePatient, name="index"),
+    path("", views.HomePage, name="home"),
+    path("home", views.HomePatient, name="index"),
     path("doctors", views.HomeDoctor, name="doctorsindex"),
     path("admin", views.HomeAdmin, name="adminindex"),
     path("about", views.AboutUs, name="about"),

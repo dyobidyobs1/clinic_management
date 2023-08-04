@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static '/image/favicon.ico' %}" type="image/x-icon">
     <link
       rel="stylesheet"
       type="text/css"
@@ -14,7 +15,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <a class="brand"><img 
+        <a class="brand" href="{% url 'home' %}"><img 
           src="{% static 'image/transLogo.png' %}" alt="Logo" height="80px" width="200px" style="margin-top:10px; margin-left: 0;"></a>
           <ul>
             {% if user.is_authenticated %}
