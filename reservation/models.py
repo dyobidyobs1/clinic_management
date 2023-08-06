@@ -10,7 +10,7 @@ from django.db import models
 fs = FileSystemStorage(location="/pdf_file")
 
 
-locale.setlocale(locale.LC_ALL, 'fil-PH')
+# locale.setlocale(locale.LC_ALL, 'fil-PH')
 
 
 
@@ -55,11 +55,14 @@ class Services(models.Model):
             return True
 
     def price(self):
-        locale.setlocale(locale.LC_ALL, 'fil-PH')
-        return locale.currency(self.service_price, grouping=True)
+        # locale.setlocale(locale.LC_ALL, 'fil-PH')
+        # return locale.currency(self.service_price, grouping=True)
+        total_amount = float(self.service_price)
+        total_amountstr = "{:,.2f}".format(total_amount)
+        return total_amountstr
 
     def __str__(self):
-        return f"{self.service_name} {locale.currency(self.service_price, grouping=True)}"
+        return f"{self.service_name} ₱{self.price()}"
 
 class Facilites(models.Model):
     facility_name = models.CharField(max_length=255)
@@ -111,7 +114,7 @@ class DoctorDetails(models.Model):
     )
 
     def date(self):
-        locale.setlocale(locale.LC_ALL, 'en-US')
+        # locale.setlocale(locale.LC_ALL, 'en-US')
         return self.bdate.strftime("%B %d, %Y")
         
     def __str__(self):
@@ -126,7 +129,7 @@ class Results(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        locale.setlocale(locale.LC_ALL, 'en-US')
+        # locale.setlocale(locale.LC_ALL, 'en-US')
         date = self.date.strftime("%B %d, %Y")
         return f"A Result for {self.patient} on {date}"
 
@@ -139,7 +142,7 @@ class Prescription(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        locale.setlocale(locale.LC_ALL, 'en-US')
+        # locale.setlocale(locale.LC_ALL, 'en-US')
         date = self.date.strftime("%B %d, %Y")
         return f"A Prescription for {self.patient} on {date}"
 
@@ -169,7 +172,7 @@ class UserDetails(models.Model):
     )
 
     def date(self):
-        locale.setlocale(locale.LC_ALL, 'en-US')
+        # locale.setlocale(locale.LC_ALL, 'en-US')
         return self.bdate.strftime("%B %d, %Y")
 
     def __str__(self):
@@ -197,7 +200,7 @@ class ReservationFacilities(models.Model):
     timeslot = models.CharField(max_length=1, choices=TS, default=1)
 
     def date(self):
-        locale.setlocale(locale.LC_ALL, 'en-US')
+        # locale.setlocale(locale.LC_ALL, 'en-US')
         return self.schedule.strftime("%B %d, %Y")
 
     def __str__(self):
@@ -228,7 +231,7 @@ class ReserveConsulation(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     def date(self):
-        locale.setlocale(locale.LC_ALL, 'en-US')
+        # locale.setlocale(locale.LC_ALL, 'en-US')
         return self.schedule.strftime("%B %d, %Y")
     
     def __str__(self):
@@ -248,8 +251,11 @@ class Billing(models.Model):
             with a Reference Number of {self.reference_number}"
 
     def price(self):
-        locale.setlocale(locale.LC_ALL, 'fil-PH')
-        return locale.currency(self.total_payment, grouping=True)
+        # locale.setlocale(locale.LC_ALL, 'fil-PH')
+        # return locale.currency(self.total_payment, grouping=True)
+        total_amount = float(self.total_payment)
+        total_amountstr = "{:,.2f}".format(total_amount)
+        return total_amountstr
 
 class Messages(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)

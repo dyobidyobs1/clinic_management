@@ -29,7 +29,7 @@ from django.conf import settings
 def Checkout(request):
     host = request.get_host()
     invoice_str = create_rand_id()
-    locale.setlocale(locale.LC_ALL, 'fil-PH')
+    # locale.setlocale(locale.LC_ALL, 'fil-PH')
     current = 0
     total_amount = 0
     form = []
@@ -85,7 +85,9 @@ def Checkout(request):
         
             send_email(subject, message, recipients)
 
-    total_amountstr = locale.currency(total_amount, grouping=True)
+    # total_amountstr = locale.currency(total_amount, grouping=True)
+    total_amount = float(total_amount)
+    total_amountstr = "{:,.2f}".format(total_amount)
 
     context = {"reservation": reservations, "total_amount": total_amountstr, "form" : form}
     return render(request, "reservation/patient/check_out_patient.html", context)
@@ -114,8 +116,11 @@ def report(request, pk):
     bill_generated = Billing.objects.get(id=pk)
     res = ReservationFacilities.objects.filter(reference_number=bill_generated.reference_number).filter(is_bill_generated=True)
 
-    locale.setlocale(locale.LC_ALL, 'fil-PH')
-    total_amountstr = locale.currency(bill_generated.total_payment, grouping=True)
+    # locale.setlocale(locale.LC_ALL, 'fil-PH')
+    # total_amountstr = locale.currency(bill_generated.total_payment, grouping=True)
+
+    total_amount = float(bill_generated.total_payment)
+    total_amountstr = "{:,.2f}".format(total_amount)
     pdf = FPDF('P', 'mm', (114.63, 119.71))
     pdf.add_page()
     pdf.add_font("DejaVuSans", fname="DejaVuSans.ttf")
@@ -128,7 +133,7 @@ def report(request, pk):
     for line in res:
         text = str(line.facility.price())
         pdf.cell(100, 8, f"Services: {line.facility.service_name.ljust(20)}", 0, 1)
-        pdf.cell(100, 10, f"Price: {text.rjust(20)} Schedule: {line.date().ljust(10)}", 0, 1)
+        pdf.cell(100, 10, f"Price: ₱{text.rjust(20)} Schedule: {line.date().ljust(10)}", 0, 1)
         pdf.cell(100, 12, f"Timeslot: {line.get_timeslot_display()}", 0, 1)
         pdf.line(1, 38, 119, 38)
 

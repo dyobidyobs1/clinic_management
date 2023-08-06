@@ -26,6 +26,9 @@ SECRET_KEY = 'django-insecure-1++zxvmldmz==bf2u99%)2r18zrxd8@n8=m3@kgq)b9)f&5eqd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+ALLOWED_HOSTS = ["127.0.0.1", "premier101-746296e691ab.herokuapp.com"]
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,6 +88,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# import dj_database_url
+
+# DATABASES['default'] = dj_database_url.parse("postgres://drnlvjktonefkc:8e9be291412ca2627b6e01bdd40ac2847b4222866ea92221670ee249f23bc44b@ec2-34-202-127-5.compute-1.amazonaws.com:5432/dac9hi4fopkgvk", conn_max_age=600)
 
 
 # Password validation
@@ -155,10 +164,11 @@ DATE_INPUT_FORMATS = [
 # Paypal Settings
 PAYPAL_TEST = True
 
-PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
+# PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
+PAYPAL_RECEIVER_EMAIL = 'premier101@gg.com'
 
-CSRF_TRUSTED_ORIGINS = ['https://2964-136-158-11-16.ngrok-free.app']
-CORS_ORIGIN_WHITELIST = ['https://2964-136-158-11-16.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://premier101-746296e691ab.herokuapp.com']
+CORS_ORIGIN_WHITELIST = ['https://premier101-746296e691ab.herokuapp.com']
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 

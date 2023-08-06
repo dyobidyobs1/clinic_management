@@ -6,7 +6,7 @@
 <div class="container">
     <h1>Checkout</h1>
     {% if total_amount != "₱0.00" %}
-    <h4 style="margin-bottom: 1rem;">Total:  {{total_amount}}</h4>
+    <h4 style="margin-bottom: 1rem;">Total: ₱{{total_amount}}</h4>
     {% else %}
         <p class="message">Reservation Exceed to Limit</p>
     {% endif %}
@@ -20,7 +20,7 @@
         </section>
         <section class="l-card__user">
             <div class="l-card__userInfo">
-                <p>Price: <span style="text-transform:uppercase"> {{i.facility.price}}</span></p>
+                <p>Price: <span style="text-transform:uppercase"> ₱{{i.facility.price}}</span></p>
                 <p>Schedule: <span style="text-transform:uppercase"> {{i.date}}</span></p>
             </div>
         </section>
