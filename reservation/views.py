@@ -755,14 +755,14 @@ from django.shortcuts import get_object_or_404
 
 def download(request, document_id):
     document = get_object_or_404(Results, pk=document_id)
-    response = HttpResponse(document.result_file.url, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{document.result_file.name}"'
+    response = HttpResponse(document.result_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{document.patient}-results.pdf"'
     return response
 
 def downloadperscrption(request, document_id):
     document = get_object_or_404(Prescription, pk=document_id)
-    response = HttpResponse(document.result_file.url, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{document.result_file.name}"'
+    response = HttpResponse(document.result_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{document.patient}-prescription.pdf"'
     return response
 
 # Verify Email
