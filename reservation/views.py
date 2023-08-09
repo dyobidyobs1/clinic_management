@@ -42,6 +42,7 @@ def Checkout(request):
         current = int(i.facility.reservation_current + 1)
         i.facility.reservation_current = current
         if current <= int(i.facility.reservation_limit):
+            i.facility.save()
             total_amount += i.facility.service_price
             if len(billing) == 0:
                 Billing.objects.create(
