@@ -124,7 +124,7 @@ class Results(models.Model):
     doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     patient = models.CharField(max_length=255)
     is_facility = models.BooleanField(default=False)
-    result_file = models.FileField(storage=fs)
+    result_file = models.FileField(upload_to='uploads/services/results')
     description = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
 
@@ -137,7 +137,7 @@ class Prescription(models.Model):
     doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     patient = models.CharField(max_length=255)
     is_facility = models.BooleanField(default=False)
-    result_file = models.FileField(storage=fs)
+    result_file = models.FileField(upload_to='uploads/consultation/results')
     description = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
 
