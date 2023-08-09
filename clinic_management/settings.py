@@ -165,7 +165,8 @@ DATE_INPUT_FORMATS = [
 PAYPAL_TEST = True
 
 # PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
-PAYPAL_RECEIVER_EMAIL = 'premier101@gg.com'
+PAYPAL_RECEIVER_EMAIL = 'sb-gqb4g27021886@business.example.com'
+# PAYPAL_RECEIVER_EMAIL = 'premier101@gg.com'
 
 CSRF_TRUSTED_ORIGINS = ['https://premier101-746296e691ab.herokuapp.com']
 CORS_ORIGIN_WHITELIST = ['https://premier101-746296e691ab.herokuapp.com']
