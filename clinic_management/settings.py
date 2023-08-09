@@ -162,7 +162,7 @@ DATE_INPUT_FORMATS = [
 ]
 
 # Paypal Settings
-PAYPAL_TEST = True
+PAYPAL_TEST = False
 
 # PAYPAL_RECEIVER_EMAIL = 'sb-m57hk25952144@business.example.com'
 PAYPAL_RECEIVER_EMAIL = 'premier101@gg.com'
