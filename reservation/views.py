@@ -100,6 +100,12 @@ def paypal_return(request):
 
 @login_required(login_url="login")
 def paypal_cancel(request):
+    reservations = ReservationFacilities.objects.filter(Q(user=request.user) and 
+        Q(is_approve=False)).filter(is_done=False).filter(is_cancelled=False).filter(is_bill_generated=False)
+    for i in reservations:
+        current = int(i.facility.reservation_current - 1)
+        i.facility.reservation_current = current
+        i.facility.save()
     messages.error(request, 'You cancel your transaction')
     return redirect('index')
 
