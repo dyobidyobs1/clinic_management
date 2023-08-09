@@ -9,7 +9,9 @@ Django==4.1.7
 django-paypal==2.0
 fonttools==4.39.3
 fpdf2==2.7.3
+gunicorn==21.2.0
 idna==3.4
+packaging==23.1
 Pillow==9.5.0
 psycopg2-binary==2.9.7
 pytz==2023.3
