@@ -26,6 +26,9 @@ class ReservationSettings(models.Model):
     reservation_limit = models.IntegerField()
     reservation_current = models.IntegerField()
 
+    class Meta:  
+        verbose_name_plural = 'Reservation Settings'
+
     def validate(self):
         if self.reservation_limit < self.reservation_current:
             return False
@@ -45,6 +48,9 @@ class Services(models.Model):
     image = models.ImageField(upload_to='uploads/services', blank=True, null=True)
     reservation_limit = models.IntegerField()
     reservation_current = models.IntegerField()
+
+    class Meta:  
+        verbose_name_plural = 'Services'
 
     def validate(self):
         if self.reservation_limit < self.reservation_current:
@@ -71,6 +77,9 @@ class Facilites(models.Model):
     reservation_limit = models.IntegerField()
     reservation_current = models.IntegerField()
 
+    class Meta:  
+        verbose_name_plural = 'Facilities'
+
     def validate(self):
         if self.reservation_limit < self.reservation_current:
             return False
@@ -80,14 +89,20 @@ class Facilites(models.Model):
             return True
 
     def price(self):
-        locale.setlocale(locale.LC_ALL, 'fil-PH')
-        return locale.currency(self.facility_price, grouping=True)
+        # locale.setlocale(locale.LC_ALL, 'fil-PH')
+        # return locale.currency(self.service_price, grouping=True)
+        total_amount = float(self.facility_price)
+        total_amountstr = "{:,.2f}".format(total_amount)
+        return total_amountstr
 
     def __str__(self):
         return f"{self.facility_name} {locale.currency(self.facility_price, grouping=True)}"
 
 class Speciality(models.Model):
     name = models.CharField(max_length=255)
+
+    class Meta:  
+        verbose_name_plural = 'Specialities'
 
     def __str__(self):
         return f"{self.name}"
@@ -113,6 +128,9 @@ class DoctorDetails(models.Model):
         max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True
     )
 
+    class Meta:  
+        verbose_name_plural = 'Doctor Details'
+
     def date(self):
         # locale.setlocale(locale.LC_ALL, 'en-US')
         return self.bdate.strftime("%B %d, %Y")
@@ -127,6 +145,9 @@ class Results(models.Model):
     result_file = models.FileField(upload_to='uploads/services/results')
     description = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:  
+        verbose_name_plural = 'Results'
 
     def __str__(self):
         # locale.setlocale(locale.LC_ALL, 'en-US')
@@ -171,6 +192,9 @@ class UserDetails(models.Model):
         max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True
     )
 
+    class Meta:  
+        verbose_name_plural = 'User Details'
+
     def date(self):
         # locale.setlocale(locale.LC_ALL, 'en-US')
         return self.bdate.strftime("%B %d, %Y")
@@ -198,6 +222,9 @@ class ReservationFacilities(models.Model):
     is_cancelled_by_admin = models.BooleanField(default=False)
     is_bill_generated = models.BooleanField(default=False)
     timeslot = models.CharField(max_length=1, choices=TS, default=1)
+
+    class Meta:  
+        verbose_name_plural = 'Reserved Facilities'
 
     def date(self):
         # locale.setlocale(locale.LC_ALL, 'en-US')
@@ -230,6 +257,9 @@ class ReserveConsulation(models.Model):
 
     date_created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:  
+        verbose_name_plural = 'Reserved Consulation'
+    
     def date(self):
         # locale.setlocale(locale.LC_ALL, 'en-US')
         return self.schedule.strftime("%B %d, %Y")
@@ -245,14 +275,13 @@ class Billing(models.Model):
     is_generated = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
-        return f"{(self.user.username.upper())} has a payable of {locale.currency(self.total_payment, grouping=True)} \
+        total_amount = float(self.total_payment)
+        total_amountstr = "{:,.2f}".format(total_amount)
+        return f"{(self.user.username.upper())} has a payable of {total_amountstr} \
             with a Reference Number of {self.reference_number}"
 
     def price(self):
-        # locale.setlocale(locale.LC_ALL, 'fil-PH')
-        # return locale.currency(self.total_payment, grouping=True)
         total_amount = float(self.total_payment)
         total_amountstr = "{:,.2f}".format(total_amount)
         return total_amountstr
@@ -262,6 +291,9 @@ class Messages(models.Model):
     to = models.CharField(max_length=255)
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:  
+        verbose_name_plural = 'Messages'
 
     def __str__(self):
         return f"{self.user} has a message to {self.to}"
