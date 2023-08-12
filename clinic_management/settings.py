@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-1++zxvmldmz==bf2u99%)2r18zrxd8@n8=m3@kgq)b9)f&5eqd
 DEBUG = True
 
 
-ALLOWED_HOSTS = ["127.0.0.1", "premier101-746296e691ab.herokuapp.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "premier101-746296e691ab.herokuapp.com", "www.premier101.tech"]
 
 # ALLOWED_HOSTS = ['*']
 
@@ -168,8 +168,10 @@ PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'sb-gqb4g27021886@business.example.com'
 # PAYPAL_RECEIVER_EMAIL = 'premier101@gg.com'
 
-CSRF_TRUSTED_ORIGINS = ['https://premier101-746296e691ab.herokuapp.com']
-CORS_ORIGIN_WHITELIST = ['https://premier101-746296e691ab.herokuapp.com']
+# CSRF_TRUSTED_ORIGINS = ['https://premier101-746296e691ab.herokuapp.com']
+# CORS_ORIGIN_WHITELIST = ['https://premier101-746296e691ab.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['http://www.premier101.tech']
+CORS_ORIGIN_WHITELIST = ['http://www.premier101.tech']
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
