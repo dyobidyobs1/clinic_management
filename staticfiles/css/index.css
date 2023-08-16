@@ -892,3 +892,11 @@ body .homepage-background {
   background-size: contain;
   height: 210rem;
 }
+
+body .whole-background {
+  background-image: url("https://res.cloudinary.com/dmagk9gck/image/upload/v1692210589/Stethoscope_10643314_original-Recovered_mtfgt5.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 63.9rem;
+}
