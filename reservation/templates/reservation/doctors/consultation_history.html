@@ -3,6 +3,7 @@
 	Consultation History
 {% endblock %}
 {% block content %}
+<div class="whole-background">
 <div class="container">
     <form action="" method="post">
         {% csrf_token %}
@@ -26,5 +27,6 @@
     </main>
     {% endfor %}
     <div class="hidden">y</div>
+</div>
 </div>
 {% endblock %}

@@ -3,11 +3,12 @@
 	Cancel Reservation
 {% endblock %}
 {% block content %}
-<div class="container">
+<div class="whole-background">
+  <div class="container">
     <h2 style="padding-top: 2rem;">Cancel Reservation</h2>
     <div class="tb-res">
-        <div class="tbl-header">
-          <table cellpadding="0" cellspacing="0" border="0">
+      <div class="tbl-header">
+        <table cellpadding="0" cellspacing="0" border="0">
             <thead>
               <tr>
                 <th scope="col">Services</th>
@@ -30,10 +31,10 @@
                 <td>Approve</td>
                 <td>
                   <a
-                    class="button-link"
-                    href="{% url 'cancelres' i.id %}"
-                    class="crud"
-                    >Cancel</a
+                  class="button-link"
+                  href="{% url 'cancelres' i.id %}"
+                  class="crud"
+                  >Cancel</a
                   >
                 </td>
               </tr>
@@ -41,5 +42,6 @@
             {% endfor %}
           </table>
         </div>
+      </div>
 </div>
 {% endblock %}

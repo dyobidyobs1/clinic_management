@@ -3,27 +3,29 @@
 	Manual Reservation
 {% endblock %}
 {% block content %}
-<div class="container">
-  <h1>Manual Reservation</h1>
-  <form action="" method="post">
-    {% csrf_token %}
-    <input type="text" placeholder="Search..." name="patient_filter">
-    <input type="submit" value="Search">
-  </form>
-    {% for i in users %}
-    <main class="l-card-consultation">
-        <section class="l-card__text">
-            <p>
-               {{i.userdetails.first_name}} {{i.userdetails.middle_name}} {{i.userdetails.last_name}}
-            </p>
-        </section>
-        <section class="l-card__user">
-            <div class="l-card__userInfo">
-                <span>Make a Reservation <a href="{% url 'manual_reservationform' i.id %}">Here...</a></span>
-            </div>
-        </section>
-    </main>
-    {% endfor %}
-    <div class="hidden">y</div>
+<div class="whole-background">
+    <div class="container">
+        <h1>Manual Reservation</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="Search..." name="patient_filter">
+            <input type="submit" value="Search">
+        </form>
+        {% for i in users %}
+        <main class="l-card-consultation">
+            <section class="l-card__text">
+                <p>
+                    {{i.userdetails.first_name}} {{i.userdetails.middle_name}} {{i.userdetails.last_name}}
+                </p>
+            </section>
+            <section class="l-card__user">
+                <div class="l-card__userInfo">
+                    <span>Make a Reservation <a href="{% url 'manual_reservationform' i.id %}">Here...</a></span>
+                </div>
+            </section>
+        </main>
+        {% endfor %}
+        <div class="hidden">y</div>
+    </div>
 </div>
 {% endblock %}

@@ -3,6 +3,7 @@
 	Checkout
 {% endblock %}
 {% block content %}
+<div class="whole-background">
 <div class="container">
     <h1>Checkout</h1>
     {% if total_amount != "₱0.00" %}
@@ -28,5 +29,6 @@
     {% endfor %}
 
     <div class="hidden">y</div>
+</div>
 </div>
 {% endblock %}

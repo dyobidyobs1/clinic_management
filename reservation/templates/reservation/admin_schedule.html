@@ -3,74 +3,79 @@
 	Schedule
 {% endblock %}
 {% block content %}
-<div class="container">
-    <div class="calendar light">
-        <div class="calendar_plan">
-        <div class="cl_plan">
-            <div class="cl_title">Today</div>
-            <span id="month">month</span>
-            <span id="daynum">00</span>,
-            <span id="year">0000</span>
-        </div>
-        </div>
-        <div class="calendar_events">
-        <p class="ce_title">Upcoming Services</p>
-        {% for i in reservation %}
-        <div class="event_item">
-            <div class="ei_Dot"></div>
-            <div class="ei_Title">{{i.user}} <a
-                class="button-link"
-                href="{% url 'admindoneres' i.id %}"
-                class="crud">Done</a>
-            </div>
-            <div class="ei_Copy">{{i.date}}</div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-<script>
-    // Date
-function updateDate() {
-  let today = new Date();
+{% load static %}
+<div class="whole-background">
+  <div class="container">
+      <div class="calendar light">
+          <div class="calendar_plan">
+          <div class="cl_plan">
+              <div class="cl_title">Today</div>
+              <span id="month">month</span>
+              <span id="daynum">00</span>,
+              <span id="year">0000</span>
+          </div>
+          </div>
+          <div class="calendar_events">
+          <p class="ce_title">Upcoming Services</p>
+          {% for i in reservation %}
+          <div class="event_item">
+              <div class="ei_Dot"></div>
+              <div class="ei_Title">{{i.user}} <a
+                  class="button-link"
+                  href="{% url 'admindoneres' i.id %}"
+                  class="crud">Done</a>
+              </div>
+              <div class="ei_Copy">{{i.date}}</div>
+          </div>
+          {% endfor %}
+          </div>
+      </div>
+  </div>
 
-  // return number
-  let dayName = today.getDay(),
-    dayNum = today.getDate(),
-    month = today.getMonth(),
-    year = today.getFullYear();
+  <script>
+      // Date
+  function updateDate() {
+    let today = new Date();
 
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const dayWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  // value -> ID of the html element
-  const IDCollection = ["daynum", "month", "year"];
-  // return value array with number as a index
-  const val = [dayNum, months[month], year];
-  for (let i = 0; i < IDCollection.length; i++) {
-    document.getElementById(IDCollection[i]).firstChild.nodeValue = val[i];
+    // return number
+    let dayName = today.getDay(),
+      dayNum = today.getDate(),
+      month = today.getMonth(),
+      year = today.getFullYear();
+
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const dayWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    // value -> ID of the html element
+    const IDCollection = ["daynum", "month", "year"];
+    // return value array with number as a index
+    const val = [dayNum, months[month], year];
+    for (let i = 0; i < IDCollection.length; i++) {
+      document.getElementById(IDCollection[i]).firstChild.nodeValue = val[i];
+    }
   }
-}
 
-updateDate();
-</script>
+  updateDate();
+  </script>
+</div>
 {% endblock %}

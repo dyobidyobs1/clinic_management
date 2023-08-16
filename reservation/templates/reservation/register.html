@@ -1,14 +1,15 @@
 {% extends 'reservation/base.html' %}
 {% block content %}
-<div class="container">
-	<form action="" method="post">
-		{% csrf_token %}
-		<h1>Register</h1>
-		<div class="register-input">
-			<div class="username">
-				<input type="text" name="username" placeholder="Username" required>
-			</div>
-			<div class="password">
+<div class="whole-background">
+	<div class="container">
+		<form action="" method="post">
+			{% csrf_token %}
+			<h1>Register</h1>
+			<div class="register-input">
+				<div class="username">
+					<input type="text" name="username" placeholder="Username" required>
+				</div>
+				<div class="password">
 				<input type="email" name="email" placeholder="Email" required>
 			</div>
 			<div class="password">
@@ -23,9 +24,10 @@
 			<button type="reset" class="button-register">Reset</button>
 		</div>
         {% for message in messages %}
-		    <p class="message">{{message}}</p>
+		<p class="message">{{message}}</p>
         {% endfor %}
 	</form>
 	<p>Already Register? Click <a href="{% url 'login' %}">here</a></p>
+	</div>
 </div>
 {% endblock %}
