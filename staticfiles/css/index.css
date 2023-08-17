@@ -899,6 +899,6 @@ body .whole-background {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
-  height: 100vh;
+  height: 47rem;
   overflow-y: scroll;
 }
