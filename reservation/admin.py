@@ -38,15 +38,15 @@ class UserAdminConfig(UserAdmin):
 
 admin.site.register(CustomUser, UserAdminConfig)
 admin.site.register(ReserveConsulation)
-admin.site.register(Results)
-admin.site.register(Prescription)
+# admin.site.register(Results)
+# admin.site.register(Prescription)
 admin.site.register(Services)
-admin.site.register(Facilites)
+# admin.site.register(Facilites)
 admin.site.register(Speciality)
 admin.site.register(DoctorDetails)
 admin.site.register(UserDetails)
 admin.site.register(Messages)
-admin.site.register(ReservationSettings)
+# admin.site.register(ReservationSettings)
 
 @admin.register(Billing)
 class BillingAdmin(admin.ModelAdmin):

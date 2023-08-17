@@ -20,7 +20,7 @@ def create_rand_id():
             allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
 
 class CustomUser(AbstractUser):
-    is_doctor = models.BooleanField(default=False)
+    is_doctor = models.BooleanField(default=False, verbose_name='Doctor')
 
 class ReservationSettings(models.Model):
     reservation_limit = models.IntegerField()
@@ -224,7 +224,7 @@ class ReservationFacilities(models.Model):
     timeslot = models.CharField(max_length=1, choices=TS, default=1)
 
     class Meta:  
-        verbose_name_plural = 'Reserved Facilities'
+        verbose_name_plural = 'Reserved Services'
 
     def date(self):
         # locale.setlocale(locale.LC_ALL, 'en-US')
@@ -258,7 +258,7 @@ class ReserveConsulation(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:  
-        verbose_name_plural = 'Reserved Consulation'
+        verbose_name_plural = 'Reserved Consultation'
     
     def date(self):
         # locale.setlocale(locale.LC_ALL, 'en-US')
