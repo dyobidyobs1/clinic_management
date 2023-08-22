@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.forms import TextInput, Textarea, CharField
 from django import forms
 from django.db import models
+from django.contrib.auth.models import Group
 
 class UserAdminConfig(UserAdmin):
     model = CustomUser
@@ -35,7 +36,7 @@ class UserAdminConfig(UserAdmin):
         ),
     )
 
-
+admin.site.unregister(Group)
 admin.site.register(CustomUser, UserAdminConfig)
 admin.site.register(ReserveConsulation)
 # admin.site.register(Results)
