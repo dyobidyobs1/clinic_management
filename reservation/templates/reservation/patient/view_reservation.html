@@ -21,6 +21,7 @@
         <section class="l-card__user">
             <div class="l-card__userInfo">
                 <span>{{i.service_name}} ₱{{i.price}} </span>
+                <span>Current Slot: {{i.reservation_current}}</span>
                 <span>Schedule a Date <a href="{% url 'reservation_add' i.id %}">Here...</a></span>
             </div>
         </section>

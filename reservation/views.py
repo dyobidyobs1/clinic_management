@@ -178,8 +178,9 @@ def Register(request):
                 send_email_token(email, random_id, host)
                 return redirect("login")
             else:
-                messages.info(request, "Make Sure your Credentials is Correct or Valid")
-                messages.info(request, "Also make sure your credentials specially password is Secure")
+                messages.info(request, "Credentials is Correct or Valid")
+                messages.info(request, "Password is Secure")
+                messages.info(request, "Email is Unique")
 
         context = {"form": form}
     return render(request, "reservation/register.html", context)
@@ -266,7 +267,7 @@ def AddReservation(request, pk):
     context = {"form": reservationform, "details": facility, "patient": patient}
     return render(request, "reservation/patient/add_reservation.html", context)
 
-@login_required(login_url="login")
+# @login_required(login_url="login")
 def ViewFacility(request):
     facility = Services.objects.all()
     context = {"details": facility}
@@ -788,3 +789,9 @@ def Verify(request, token):
     
 def ContactUs(request):
     return render(request, "reservation/contact.html")
+
+
+# Privacy
+
+def Privacy(request):
+    return render(request, "reservation/privacy_policy.html")

@@ -902,3 +902,31 @@ body .whole-background {
   height: 54.5rem;
   overflow-y: scroll;
 }
+
+
+.check {
+  /* width: 100%; */
+  margin: auto;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+  width: 275px;
+}
+
+.check input[type="checkbox"] {
+  margin-top: 8px;
+  width: 60px;
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+  -ms-appearance: checkbox !important;
+  -o-appearance: checkbox !important;
+  appearance: checkbox !important;
+}
+/* 
+.check input[type="checkbox"]:hover {
+  all: unset;
+}
+
+.check input[type="checkbox"]:focus {
+  all: unset;
+} */

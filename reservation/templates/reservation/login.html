@@ -9,6 +9,10 @@
             <input name="username" type="text" placeholder="Username">
             <input name="password" type="password" placeholder="Password">
             <button type="submit" id="login-button">Login</button>
+            <div class="check">
+                <input type="checkbox" name="privacy" required>
+                <label for="privacy"><u><b>I agree to these <a href="{% url 'privacy' %}">Privacy Policy</a>.</b></u></label>
+            </div>
         </form>
         {% for message in messages %}
             <p class="message">{{message}}</p>

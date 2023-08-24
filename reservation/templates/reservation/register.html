@@ -23,9 +23,11 @@
 			<button type="submit" class="button-register">Register</button>
 			<button type="reset" class="button-register">Reset</button>
 		</div>
+		<h4 style="margin-top:1rem"><mark style="background-color: yellow; color: black;">There is an Error in Register make sure you meet the requirements:</mark></h4>
         {% for message in messages %}
-		<p class="message">{{message}}</p>
+		<b><p class="message" style="color:red">{{message}}</p></b>
         {% endfor %}
+		</ul>
 	</form>
 	<p>Already Register? Click <a href="{% url 'login' %}">here</a></p>
 	</div>

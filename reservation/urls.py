@@ -81,6 +81,8 @@ urlpatterns = [
 
     # Verify
     path('verify/<str:token>', views.Verify, name='verify'),
+    # Privacy
+    path('privacy/', views.Privacy, name='privacy'),
 
     # Reset Password
     path(

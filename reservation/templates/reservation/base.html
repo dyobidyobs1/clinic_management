@@ -53,12 +53,13 @@
                 <li>
                   <a href="{% url 'scheduledt' %}">Schedule</a>
                 </li>
-                <li>
+                <!-- <li>
                   <a href="{% url 'consulhistory' %}">Consultations History</a>
-                </li>
+                </li> -->
                 <li class="dd">
                   <a href="#">Patient History &dtrif;</a>
                   <ul class="dropdown">
+                    <li><a href="{% url 'consulhistory' %}">Consultations History</a></li>
                     <li><a href="{% url 'resultshistory' %}">Laboratory Results</a></li>
                     <li><a href="{% url 'pershistory' %}">Prescription</a></li>
                   </ul>
@@ -119,6 +120,9 @@
                 </li>
               {% endif %}
             {% else %}
+              <li>
+                <a href="{% url 'reservation_view' %}">Services</a>
+              </li>
               <li>
                   <a href="{% url 'login' %}">Login</a>
               </li>
