@@ -12,6 +12,11 @@
             <p>
                {{i.description}}
             </p>
+            {% if i.result_file %}
+                <img height="400" width="400" src="{{i.result_file.url}}" alt="">
+            {% else %}
+                <h1>No Available Image</h1>
+            {% endif %}
         </section>
         <section class="l-card__user">
             <div class="l-card__userInfo">
