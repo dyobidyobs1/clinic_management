@@ -83,6 +83,7 @@ urlpatterns = [
     path('verify/<str:token>', views.Verify, name='verify'),
     # Privacy
     path('privacy/', views.Privacy, name='privacy'),
+    path('refund/', views.Refund, name='refund'),
 
     # Reset Password
     path(

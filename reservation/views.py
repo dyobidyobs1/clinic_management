@@ -178,9 +178,8 @@ def Register(request):
                 send_email_token(email, random_id, host)
                 return redirect("login")
             else:
-                messages.info(request, "Credentials is Correct or Valid")
-                messages.info(request, "Password is Secure")
-                messages.info(request, "Email is Unique")
+                messages.info(request, "MAIL IS ALREADY USED")
+                messages.info(request, "INCORRECT/MISMATCH PASSWORD")
 
         context = {"form": form}
     return render(request, "reservation/register.html", context)
@@ -804,3 +803,7 @@ def ContactUs(request):
 
 def Privacy(request):
     return render(request, "reservation/privacy_policy.html")
+
+
+def Refund(request):
+    return render(request, "reservation/refund_policy.html")
