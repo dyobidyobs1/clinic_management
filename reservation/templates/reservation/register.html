@@ -23,7 +23,9 @@
 			<button type="submit" class="button-register">Register</button>
 			<button type="reset" class="button-register">Reset</button>
 		</div>
+		{% if message %}
 		<h4 style="margin-top:1rem"><mark style="background-color: yellow; color: black;">There is an Error in Register make sure you meet the requirements:</mark></h4>
+		{% endif %}
         {% for message in messages %}
 		<b><p class="message" style="color:red">{{message}}</p></b>
         {% endfor %}
