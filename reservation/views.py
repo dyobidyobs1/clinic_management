@@ -174,7 +174,7 @@ def Register(request):
                 email = form.cleaned_data.get("email")
                 messages.success(request, "Account Created For " + user)
                 messages.success(request, "Please verify your Email in " + email)
-                UserDetails.objects.create(user=username, token=random_id)
+                UserDetails.objects.create(user=username, token=random_id, email=email)
                 send_email_token(email, random_id, host)
                 return redirect("login")
             else:
@@ -212,7 +212,10 @@ def Login(request):
                         messages.info(request, "Your Account is Not Verified")
                     else:
                         login(request, user)
-                        return redirect("index")
+                        if userDet[0].is_first_login:
+                            return redirect("editprofilept", userDet[0].rndid)
+                        else:
+                            return redirect("index")
                 else:
                     login(request, user)
                     if user.is_staff:
@@ -275,7 +278,7 @@ def ViewFacility(request):
 
 @login_required(login_url="login")
 def ViewConsultation(request):
-    doctors = DoctorDetails.objects.all()
+    doctors = DoctorDetails.objects.filter(is_available=True)
     context = {"details": doctors}
     return render(request, "reservation/patient/view_consultation.html", context)
 
@@ -394,9 +397,10 @@ def EditProfilePatient(request, pk):
         profile_form = UserProfileForm(request.POST, request.FILES, instance=profile_details)
         if profile_form.is_valid():
             profile_form.save(commit=False).user = request.user
+            profile_form.save(commit=False).is_first_login = False
             profile_form.save()
             return redirect('profile_patient')
-    context = {"form": profile_form}
+    context = {"form": profile_form, 'details': profile_details}
     return render(request, "reservation/patient/edit_profile.html", context)
 
 @login_required(login_url="login")
@@ -430,7 +434,12 @@ def HomeDoctor(request):
     elif not request.user.is_doctor:
         return redirect("index")
     else:
-        return render(request, "reservation/doctors/doctors_home.html")
+        profile_details = DoctorDetails.objects.filter(user=request.user)
+        print(profile_details)
+        if  profile_details:
+            return render(request, "reservation/doctors/doctors_home.html")
+        else:
+            return redirect('profile_doctor')
     
 @login_required(login_url="login")
 def CheckConsultation(request):

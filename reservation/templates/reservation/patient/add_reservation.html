@@ -10,6 +10,7 @@
         <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <label>Services: </label>
+        <h4>Current Available Slot: {{details.available}}</h4>
         <input name="facility" type="text" placeholder="{{details}}" value="{{details}}" disabled>
         <input name="patient" type="hidden" placeholder="{{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" value=" {{patient.last_name}}, {{patient.first_name}} {{patient.middle_name}}" hidden>
         <label>Schedule: </label>

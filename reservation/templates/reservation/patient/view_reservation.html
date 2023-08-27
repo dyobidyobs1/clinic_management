@@ -7,25 +7,27 @@
 <div class="container">
     <h1>Services Reservation</h1>
     {% for i in details %}
-    <main class="l-card-consultation">
-        <section class="l-card__text">
-            <p>
-               {{i.service_description}}
-            </p>
-            {% if i.image %}
-            <img height="400" width="400" src="{{i.image.url}}" alt="">
-            {% else %}
-                <h1>No Available Image</h1>
-            {% endif %}
-        </section>
-        <section class="l-card__user">
-            <div class="l-card__userInfo">
-                <span>{{i.service_name}} ₱{{i.price}} </span>
-                <span>Current Slot: {{i.reservation_current}}</span>
-                <span>Schedule a Date <a href="{% url 'reservation_add' i.id %}">Here...</a></span>
-            </div>
-        </section>
-    </main>
+        {% if i.validate %}
+            <main class="l-card-consultation">
+                <section class="l-card__text">
+                    <p>
+                    {{i.service_description}}
+                    </p>
+                    {% if i.image %}
+                    <img height="400" width="400" src="{{i.result_file.url}}" alt="">
+                    {% else %}
+                        <h1>No Available Image</h1>
+                    {% endif %}
+                </section>
+                <section class="l-card__user">
+                    <div class="l-card__userInfo">
+                        <span>{{i.service_name}} ₱{{i.price}} </span>
+                        <span>Current Available Slot: {{i.available}}</span>
+                        <span>Schedule a Date <a href="{% url 'reservation_add' i.id %}">Here...</a></span>
+                    </div>
+                </section>
+            </main>
+        {% endif %}
     {% endfor %}
     <div class="hidden">y</div>
 </div>

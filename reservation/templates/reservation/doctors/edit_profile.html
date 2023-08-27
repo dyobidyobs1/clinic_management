@@ -3,12 +3,19 @@
 	Edit Profile
 {% endblock %}
 {% block content %}
+{% load static %}
 <div class="whole-background">
 <div class="container">
     <h1>Edit Profile</h1>
     <div class="section-delete">
         <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+        <label>Availability: </label>
+        <div class="check">
+            {{form.is_available}}
+            <!-- <input type="checkbox" name="is_available"> -->
+            <label for="privacy"><u><b>I am Available</b></u></label>
+        </div>
         <label>First Name: </label>
         {{form.first_name}}
         <label>Middle Name: </label>

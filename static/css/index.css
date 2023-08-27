@@ -909,13 +909,16 @@ body .whole-background {
   margin: auto;
   margin-top: 1rem;
   display: flex;
-  justify-content: space-evenly;
+  /* justify-content: space-around; */
   width: 275px;
 }
 
 .check input[type="checkbox"] {
   margin-top: 8px;
-  width: 60px;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100px;
+  height: 20px;
   -webkit-appearance: checkbox !important;
   -moz-appearance: checkbox !important;
   -ms-appearance: checkbox !important;

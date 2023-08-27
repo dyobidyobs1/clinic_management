@@ -56,9 +56,12 @@ class Services(models.Model):
         if self.reservation_limit < self.reservation_current:
             return False
         elif self.reservation_limit == self.reservation_current:
-            return False
+            return False 
         else:
             return True
+    
+    def available(self):
+        return int(self.reservation_limit - self.reservation_current)
 
     def price(self):
         # locale.setlocale(locale.LC_ALL, 'fil-PH')
@@ -124,6 +127,7 @@ class DoctorDetails(models.Model):
     bdate = models.DateTimeField(null=True, blank=True)
     placebirth = models.CharField(max_length=50, null=True, blank=True)
     speciality = models.ForeignKey(Speciality, on_delete=models.CASCADE, null=True, blank=True)
+    is_available = models.BooleanField(default=False)
     rndid = models.CharField(
         max_length=100, default=uuid.uuid4, editable=False, null=True, blank=True
     )
@@ -185,6 +189,7 @@ class UserDetails(models.Model):
     bdate = models.DateTimeField(null=True, blank=True)
     placebirth = models.CharField(max_length=50, null=True)
     is_verified = models.BooleanField(default=False)
+    is_first_login = models.BooleanField(default=True)
     token = models.CharField(
         max_length=100, null=True, blank=True, editable=False
     )
