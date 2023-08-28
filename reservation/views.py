@@ -178,8 +178,8 @@ def Register(request):
                 send_email_token(email, random_id, host)
                 return redirect("login")
             else:
-                messages.info(request, "MAIL IS ALREADY USED")
-                messages.info(request, "INCORRECT/MISMATCH PASSWORD")
+                messages.info(request, "EMAIL IS ALREADY USED")
+                #messages.info(request, "INCORRECT/MISMATCH PASSWORD")
 
         context = {"form": form}
     return render(request, "reservation/register.html", context)
